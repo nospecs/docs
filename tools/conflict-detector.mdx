@@ -1,0 +1,93 @@
+---
+title: Conflict Detector
+description: Overview and usage of OVADARE's Conflict Detector for identifying conflicts in multi-agent systems.
+---
+
+## Introduction
+
+The **Conflict Detector** is a key tool in OVADARE, responsible for identifying conflicts within multi-agent workflows. It evaluates agent actions against defined policies to detect policy violations or misalignments.
+
+By leveraging this tool, developers can ensure seamless collaboration among AI agents and prevent disruptions caused by conflicting actions.
+
+## How It Works
+
+The Conflict Detector monitors agent activities and evaluates them against predefined policies. When an action violates a policy, the Conflict Detector flags it as a conflict and stores it for further resolution.
+
+## Key Features
+
+- **Policy Evaluation**: Matches agent actions to the defined rules in the Policy Manager.
+- **Conflict Storage**: Keeps track of identified conflicts for resolution or analysis.
+- **Customizable Detection Logic**: Allows developers to adapt the detection mechanism to fit specific needs.
+
+## Code Example
+
+### Detecting a Conflict
+
+Here’s how to use the Conflict Detector to identify a conflict:
+
+```
+from ovadare.conflicts.conflict_detector import ConflictDetector
+from ovadare.policies.policy_manager import PolicyManager
+
+# Initialize Policy Manager and Conflict Detector
+policy_manager = PolicyManager()
+conflict_detector = ConflictDetector(policy_manager=policy_manager)
+
+# Define an agent action
+action = {
+    "agent_id": "Agent001",
+    "action_type": "modify",
+    "resource": "RestrictedFile"
+}
+
+# Detect conflicts
+conflicts = conflict_detector.detect(agent_id="Agent001", action=action)
+
+if conflicts:
+    print("Conflicts detected:")
+    for conflict in conflicts:
+        print(conflict.to_dict())
+else:
+    print("No conflicts detected.")
+```
+
+### Retrieving All Conflicts
+
+Use the following code to retrieve all stored conflicts:
+
+```
+conflict_list = conflict_detector.get_all_conflicts()
+print(f"Total conflicts detected: {len(conflict_list)}")
+```
+
+### Resolving a Conflict
+
+Conflicts can be resolved by removing them from the system:
+
+```
+if conflicts:
+    conflict_id = conflicts[0].conflict_id
+    conflict_detector.resolve_conflict(conflict_id=conflict_id)
+    print(f"Conflict {conflict_id} resolved.")
+```
+
+## Example Use Case
+
+**Scenario**: A data processing agent attempts to access a resource beyond its permissions.
+
+- **Step 1**: The Conflict Detector identifies the action as a violation of the data access policy.
+- **Step 2**: The conflict is stored and flagged for resolution.
+- **Step 3**: A custom resolution strategy is applied to prevent unauthorized access.
+
+## Best Practices
+
+- **Define Clear Policies**: Ensure all agent actions are covered by comprehensive rules in the Policy Manager.
+- **Monitor Regularly**: Use the `get_all_conflicts` method to keep track of active conflicts.
+- **Log Conflicts**: Maintain a log of conflicts for future analysis and feedback-driven improvements.
+
+## Learn More
+
+Explore related topics:
+- **[Resolution Engine](resolution-engine)**: How conflicts are resolved.
+- **[Define Custom Policies](define-custom-policies)**: Guide to creating effective policies.
+- **[Integrate with AutoGen](integrate-with-autogen)**: Using OVADARE with multi-agent platforms.
