@@ -4,6 +4,7 @@
   "logo": {
     "dark": "/logo/OVADARE-logo-white.svg",
     "light": "/logo/OVADARE-logo.svg"
+    "banner": "/logo/ovadare-banner.png"
   },
   "favicon": "/logo/OVADARE-logo.svg",
   "colors": {
