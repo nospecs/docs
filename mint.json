@@ -7,9 +7,9 @@
   },
   "favicon": "/logo/light.svg",
   "colors": {
-    "primary": "#000000",
-    "light": "#FFD700",  // Gold for lighter UI contexts
-    "dark": "#000000",   // Black for darker UI contexts
+    "primary": "linear-gradient(90deg, #FFD700, #000000)",
+    "light": "#FFD700",
+    "dark": "#000000",
     "anchors": {
       "from": "linear-gradient(90deg, #FFD700, #000000)",
       "to": "linear-gradient(90deg, #000000, #FFD700)"
