@@ -55,7 +55,7 @@
         "introduction",
         "installation",
         "quickstart"
-      ],
+      ]
       "group": "Core Concepts",
       "pages": [
         "core-concepts/conflict-detection",
