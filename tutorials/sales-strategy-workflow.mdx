@@ -1,0 +1,97 @@
+---
+title: Sales Strategy Workflow
+description: 'Leverage OVADARE to streamline the development of sales strategies by resolving conflicts between AI agents.'
+---
+
+# Sales Strategy Workflow
+
+This tutorial showcases how OVADARE can be utilized to manage multi-agent workflows for creating effective sales strategies.
+
+## Overview
+
+In this scenario, a team of agents is assigned to develop a sales strategy:
+- **Market Analyst Agent**: Researches market trends and customer behavior.
+- **Competitor Analyst Agent**: Analyzes competitor strategies and pricing.
+- **Pricing Strategist Agent**: Develops pricing strategies based on market and competitor analysis.
+- **Presentation Designer Agent**: Compiles the findings into a sales presentation.
+
+### Workflow
+
+1. Agents gather and analyze data.
+2. They collaborate to develop a cohesive sales strategy.
+3. Conflicts, such as data overlap or strategy contradictions, are detected and resolved.
+
+---
+
+## Detecting and Resolving Conflicts
+
+### Step 1: Initializing OVADARE
+
+Integrate OVADARE with the agent orchestration system:
+```
+from ovadare.conflicts.conflict_detector import ConflictDetector
+from ovadare.resolutions.resolution_engine import ResolutionEngine
+from ovadare.policies.policy_manager import PolicyManager
+
+conflict_detector = ConflictDetector()
+resolution_engine = ResolutionEngine()
+policy_manager = PolicyManager()
+```
+
+### Step 2: Define Policies
+
+Set rules to govern agent behavior:
+```
+policy_manager.add_policy({
+    'name': 'PricingPolicy',
+    'rules': {
+        'access_level': 'restricted',
+        'resource': 'competitor_pricing'
+    }
+})
+```
+
+### Step 3: Monitoring Agent Actions
+
+Track actions performed by agents:
+```
+agent_actions = [
+    {'agent_id': 'market_analyst', 'action': 'analyze_market', 'resource': 'market_data'},
+    {'agent_id': 'competitor_analyst', 'action': 'access_data', 'resource': 'competitor_pricing'},
+    {'agent_id': 'pricing_strategist', 'action': 'create_pricing', 'strategy': 'below_market'}
+]
+conflicts = conflict_detector.detect(agent_actions)
+```
+
+### Step 4: Generating Resolutions
+
+Resolve detected conflicts:
+```
+if conflicts:
+    resolutions = resolution_engine.generate_resolutions(conflicts)
+    for resolution in resolutions:
+        print(f"Resolution: {resolution}")
+```
+### Step 5: Applying Resolutions
+
+Communicate resolutions back to agents:
+```
+for resolution in resolutions:
+    agent_id = resolution['agent_id']
+    corrective_action = resolution['corrective_action']
+    autogen_api.apply_resolution(agent_id, corrective_action)
+```
+
+---
+
+## Outcome
+
+With OVADARE:
+- Agents collaborate effectively without violating defined policies.
+- Sales strategy development proceeds without delays.
+- Conflicts are detected early and resolved efficiently.
+
+## Next Steps
+
+- Learn how to define custom policies in [Define Custom Policies](../how-to-guides/define-custom-policies).
+- Explore [Conflict Detection](../core-concepts/conflict-detection) for deeper insights.
