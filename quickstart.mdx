@@ -27,13 +27,15 @@ Create custom conflict policies to govern agent interactions:
 
 ```from ovadare.policies.policy_manager import Policy```
 
-``` policy = Policy(
+```
+policy = Policy(
     name='WriteAccessPolicy',
     rules={
         'resource_limits': 'moderate',
         'access_level': 'read-only'
     }
-)```
+)
+```
 
 ### Step 4: Initialize the Conflict Detector and Resolution Engine
 
