@@ -28,7 +28,7 @@
   "tabs": [
     {
       "name": "API Reference",
-      "url": "/api-reference"
+      "url": "api-reference"
     }
   ],
   "anchors": [
@@ -41,11 +41,6 @@
       "name": "Community",
       "icon": "slack",
       "url": "https://community.ovadare.com"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://blog.ovadare.com"
     }
   ],
   "navigation": [
