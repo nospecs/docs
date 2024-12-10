@@ -1,76 +1,82 @@
 ---
 title: Resolution Engine
-description: Discover how OVADARE generates and applies resolutions for detected conflicts.
+description: "How OVADARE resolves detected conflicts to maintain smooth AI agent operations."
 ---
 
-## What is the Resolution Engine?
+## Resolution Engine
 
-The Resolution Engine is a core component of OVADARE, responsible for resolving conflicts between AI agents. It generates actionable solutions based on detected conflicts and applies them to ensure the system continues functioning smoothly.
+The Resolution Engine is OVADARE’s core component for addressing conflicts detected in multi-agent workflows. Once a conflict is flagged, the Resolution Engine ensures appropriate measures are taken to resolve it efficiently.
 
-### Why It Matters
+### The Role of the Resolution Engine
 
-Conflicts between agents can disrupt workflows and lead to inefficiencies. The Resolution Engine mitigates this by:
-- **Analyzing conflicts**: Determines the root cause of detected conflicts.
-- **Proposing resolutions**: Suggests corrective actions based on predefined rules or dynamic inputs.
-- **Applying resolutions**: Communicates the resolution back to the system for implementation.
+Multi-agent systems often encounter situations where conflicts must be resolved to prevent disruptions. These conflicts may arise due to:
 
----
+- **Resource contention**: Multiple agents attempting to access the same resource simultaneously.
+- **Policy violations**: Actions taken by an agent that breach organizational or predefined policies.
+- **Conflicting objectives**: Agents pursuing goals that are incompatible.
 
-## How It Works
+The Resolution Engine acts as a mediator, analyzing conflicts and applying or suggesting resolutions.
 
-1. **Conflict Input**:
-   The Resolution Engine receives detected conflicts from the Conflict Detector.
-2. **Resolution Generation**:
-   Based on predefined rules or dynamic logic, resolutions are created to address the conflict.
-3. **Communication to Agents**:
-   The proposed resolution is applied by informing the affected agents or modifying their actions.
+### How It Works
 
----
+The Resolution Engine follows a structured process to address conflicts:
 
-### Code Example
+1. **Conflict Intake**: Receives detailed conflict metadata from the Conflict Detector.
+2. **Resolution Strategy Selection**: Determines the best approach to resolve the conflict based on predefined policies, historical data, and contextual analysis.
+3. **Resolution Application**: Applies the resolution dynamically or recommends an action to the user.
+4. **Feedback Loop**: Updates policies or workflows based on the resolution outcome to prevent future conflicts.
 
-Here’s how to use the Resolution Engine to resolve a detected conflict:
+### Example Workflow: Meeting Preparation
 
-```
-from ovadare.conflicts.resolution_engine import ResolutionEngine
-from ovadare.conflicts.conflict import Conflict
-```
+Continuing with the **Meeting Preparation** scenario from the Conflict Detection example:
 
-# Initialize the Resolution Engine
-```
-resolution_engine = ResolutionEngine()
-```
+#### Conflict Scenario: Resource Contention
 
-# Example conflict
-```
-conflict = Conflict(
-    related_agent_id="agent1",
-    action={"type": "write", "resource": "fileA"},
-    violation_details="Resource contention with another agent",
-    policy_id="write_policy_1"
-)
-```
+The **Sales Strategist Agent** and **Product Specialist Agent** simultaneously request access to a shared analytics tool, exceeding its capacity.
 
-# Generate a resolution
-```
-resolutions = resolution_engine.generate_resolutions([conflict])
-for resolution in resolutions:
-    print(f"Resolution for conflict {conflict.conflict_id}: {resolution.explanation}")
-```
+#### Resolution Steps:
 
----
+1. **Conflict Intake**:
+   - The Resolution Engine receives metadata about the conflict (e.g., agent IDs, resource, timestamp).
+2. **Analyze Context**:
+   - Identifies the nature of the conflict as resource contention.
+3. **Apply Resolution**:
+   - Assigns prioritized access to the **Sales Strategist Agent** based on urgency and workflow rules.
+   - The **Product Specialist Agent** is queued for later access.
+4. **Feedback Update**:
+   - Updates the policy to include dynamic load balancing for shared resources.
 
-## Key Features
+### Tools for Conflict Resolution
 
-- **Dynamic Resolutions**:
-  Automatically generates resolutions tailored to specific conflicts.
-- **Agent Communication**:
-  Applies resolutions by interacting directly with agents or orchestration platforms.
-- **Customizability**:
-  Developers can define their own resolution logic and strategies.
+OVADARE includes powerful tools to manage and resolve conflicts effectively:
 
----
+<CardGroup cols={2}>
+  <Card title="Resolution Engine" icon="gavel" href="/tools/resolution-engine">
+    Explore how the Resolution Engine works in depth.
+  </Card>
 
-## Next Steps
+  <Card title="Policy Manager" icon="cogs" href="/tools/policy-manager">
+    Learn how policies influence resolution strategies.
+  </Card>
+</CardGroup>
 
-Learn how to define custom rules and policies for conflicts in the [Policies](policies) section. For advanced use cases, explore [Customizing Resolution Strategies](how-to-guides/customize-resolution-strategies).
+### Extending the Resolution Engine
+
+The Resolution Engine is flexible and can be customized to meet specific needs. For example:
+
+- **Custom Strategies**: Define unique approaches for handling conflicts based on organizational requirements.
+- **Integrations**: Connect the Resolution Engine with external tools for logging, monitoring, or escalations.
+
+### Next Steps
+
+After resolving conflicts, OVADARE integrates seamlessly with feedback systems to continuously refine policies and workflows.
+
+<CardGroup cols={2}>
+  <Card title="Feedback Loop" icon="sync-alt" href="/core-concepts/feedback">
+    Discover how OVADARE improves over time through feedback.
+  </Card>
+
+  <Card title="Tutorials" icon="play" href="/tutorials/meeting-preparation-with-autogen">
+    Learn how the Resolution Engine works in a real-world scenario.
+  </Card>
+</CardGroup>

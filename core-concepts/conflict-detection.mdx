@@ -1,73 +1,91 @@
 ---
 title: Conflict Detection
-description: "How OVADARE identifies conflicts in multi-agent workflows to ensure smooth operations."
+description: Learn how OVADARE detects conflicts in multi-agent workflows to ensure smooth operations.
 ---
 
-## Conflict Detection
+## Conflict Detection in OVADARE
 
-Conflict detection lies at the heart of OVADARE, enabling seamless collaboration among AI agents. By identifying policy violations, misaligned behaviors, and competing objectives, OVADARE prevents conflicts from disrupting multi-agent workflows.
+Conflict Detection is at the heart of OVADARE's mission: **identifying and addressing issues in multi-agent workflows**. It works seamlessly alongside platforms like AutoGen and CrewAI to ensure agents' actions align with defined policies and do not interfere with each other.
 
-### Why is Conflict Detection Important?
+### What Is Conflict Detection?
 
-AI agents operate autonomously but lack the inherent social norms and judgment humans rely on. This autonomy can lead to:
+Conflict Detection is a **framework service** that evaluates agents' actions against predefined policies. It identifies potential issues, such as:
 
-- Policy violations (e.g., unauthorized data access).
-- Conflicting objectives (e.g., agents competing for shared resources).
-- Redundant or contradictory actions.
+- Overlapping or conflicting actions between agents.
+- Violations of defined policies or boundaries.
+- Situations requiring intervention to ensure the workflow's integrity.
 
-Conflict detection ensures multi-agent systems remain efficient and aligned with organizational goals.
+### How Does It Work?
 
-### How Conflict Detection Works
+Conflict Detection operates automatically within OVADARE, relying on inputs provided by developers:
 
-OVADARE leverages its **Conflict Detector** to monitor and evaluate agent actions in real time. The process involves:
+1. **Agent Registration**  
+   Agents are registered with OVADARE's `AgentRegistry`, allowing the system to track their actions.
 
-1. **Policy Evaluation**: Actions are checked against pre-defined rules and boundaries set for each agent.
-2. **Interaction Monitoring**: Tracks agent-to-agent communication to identify potential contradictions.
-3. **Dynamic Updates**: Adapts to changing workflows and policies in runtime to maintain relevance.
+   Example:
+   ```
+   Registering an agent with OVADARE
+   from ovadare.agents.agent_registry import AgentRegistry  
+   registry = AgentRegistry()  
+   registry.register_agent(agent_instance)
+   ```
 
-### Example Workflow: Meeting Preparation
+2. **Policy Definition**  
+   Developers define rules and boundaries for agent actions using the `PolicyManager`.
 
-Imagine a team of agents orchestrated via AutoGen for preparing a client meeting:
+   Example:  
+   ```
+   Adding a custom policy
+   from ovadare.policies.policy_manager import PolicyManager
+   policy_manager = PolicyManager()
+   policy_manager.add_policy(custom_policy)
+   ```
 
-- **Lead Researcher Agent** gathers company details and industry trends.
-- **Product Specialist Agent** prepares product-specific insights.
-- **Sales Strategist Agent** develops a custom strategy.
-- **Briefing Coordinator Agent** compiles the final document.
+3. **Action Monitoring**  
+   OVADARE’s `ConflictDetector` continuously evaluates agent actions to detect violations.
 
-#### Conflict Scenario: Policy Violation
+   Example:  
+   ```
+   Detecting conflicts in agent actions
+   from ovadare.conflicts.conflict_detector import ConflictDetector
+   detector = ConflictDetector(policy_manager=policy_manager)
+   conflicts = detector.detect(agent_id="123", action={"type": "write_data"})
+   ```
 
-The **Lead Researcher Agent** attempts to access restricted data, violating its policy boundaries.
+4. **Conflict Analysis**  
+   Detected conflicts are logged and made available for further analysis. Developers can review conflicts and decide how to handle them.
 
-#### Conflict Detection Steps:
+### What Can Developers Do?
 
-1. **Action Logged**: OVADARE logs the agent's attempt to access restricted data.
-2. **Policy Cross-Check**: The action is evaluated against its assigned policy.
-3. **Conflict Flagging**: A violation is flagged, and metadata (e.g., agent ID, action details, timestamp) is recorded.
+Conflict Detection is an automated service, but developers interact with it by:
 
-### Tools for Conflict Detection
+1. **Defining policies and registering agents** to shape the rules governing agent interactions.
+2. **Consuming conflict data** to improve workflows or resolve issues.
 
-OVADARE provides robust tools to support conflict detection:
+For example:
+- Create policies to prevent resource access conflicts.
+- Use detected conflicts to optimize agent collaboration.
 
-<CardGroup cols={2}>
-  <Card title="Conflict Detector" icon="shield" href="/tools/conflict-detector">
-    Dive deeper into the Conflict Detector component.
-  </Card>
+---
 
-  <Card title="Policy Manager" icon="cogs" href="/tools/policy-manager">
-    Learn how to define and manage agent boundaries effectively.
-  </Card>
-</CardGroup>
+### Example Workflow
 
-### Next Steps
+Consider a **sales strategy meeting preparation**:
 
-After identifying a conflict, OVADARE routes it to the **Resolution Engine**, which suggests or applies a resolution to ensure smooth operations.
+- Agents: A research agent, a strategy agent, and a coordination agent.
+- Task: Gather data, create a strategy, and compile a briefing document.
 
-<CardGroup cols={2}>
-  <Card title="Resolution Engine" icon="gavel" href="/core-concepts/resolution-engine">
-    Discover how OVADARE resolves conflicts.
-  </Card>
+If two agents attempt to edit the same document simultaneously, OVADARE detects this conflict by:
+1. Evaluating the actions against the policies.
+2. Identifying the overlapping task.
+3. Logging the conflict for resolution.
 
-  <Card title="Tutorials" icon="play" href="/tutorials/meeting-preparation-with-autogen">
-    See conflict detection in action with a real-world use case.
-  </Card>
-</CardGroup>
+---
+
+### Key Takeaways
+
+- Conflict Detection is **not something developers implement directly** but a service layer that monitors workflows.
+- Developers focus on **defining agents and policies** while OVADARE handles monitoring and evaluation.
+- Outputs include **conflict logs** and recommendations for resolution.
+
+Ready to define your policies? Check out the [Policy Management](../core-concepts/policies) guide.
