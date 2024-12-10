@@ -2,17 +2,17 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "OVADARE",
   "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
+    "dark": "/logo/OVADARE-logo-white.svg",
+    "light": "/logo/OVADARE-logo.svg"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/logo/OVADARE-logo.svg",
   "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373",
+    "primary": "#1A73E8",
+    "light": "#4285F4",
+    "dark": "#174EA6",
     "anchors": {
-      "from": "#0D9373",
-      "to": "#07C983"
+      "from": "#1A73E8",
+      "to": "#4285F4"
     }
   },
   "topbarLinks": [
@@ -25,6 +25,24 @@
     "name": "Dashboard",
     "url": "https://dashboard.ovadare.com"
   },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "Documentation",
+      "icon": "book-open-cover",
+      "url": "/"
+    },
+    {
+      "name": "Community",
+      "icon": "slack",
+      "url": "https://community.ovadare.com"
+    }
+  ],
   "navigation": [
     {
       "group": "Get Started",
@@ -37,11 +55,11 @@
     {
       "group": "Core Concepts",
       "pages": [
-        "core-concepts/introduction",
         "core-concepts/conflict-detection",
         "core-concepts/resolution-engine",
         "core-concepts/policies",
         "core-concepts/agents",
+        "core-concepts/agent-interactions",
         "core-concepts/feedback-driven-improvement"
       ]
     },
