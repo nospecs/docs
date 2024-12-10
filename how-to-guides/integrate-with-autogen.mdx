@@ -7,14 +7,15 @@ description: Step-by-step guide to integrate OVADARE with AutoGen.
 
 AutoGen focuses on multi-agent orchestration and collaboration. By integrating OVADARE, you gain the ability to detect and resolve conflicts between agents, ensuring seamless workflows and preventing bottlenecks.
 
----
+***
 
 ## Prerequisites
 
-- **AutoGen installed:** Follow [AutoGen Installation Guide](https://docs.autogen.com/install).
-- **OVADARE installed:** Refer to our [Installation Guide](/get-started/installation).
+* **AutoGen installed:** Follow [AutoGen Installation Guide](https://docs.autogen.com/install).
 
----
+* **OVADARE installed:** Refer to our [Installation Guide](/get-started/installation).
+
+***
 
 ## Integration Steps
 
@@ -23,7 +24,6 @@ AutoGen focuses on multi-agent orchestration and collaboration. By integrating O
 AutoGen uses event hooks to allow external systems like OVADARE to monitor agent activities. Update your AutoGen configuration to send agent events to OVADARE.
 
 ```
-python
 from autogen import AgentManager
 from ovadare import ConflictDetector
 
@@ -46,7 +46,6 @@ manager.register_event_listener(conflict_detector.handle_agent_activity)
 Define policies in OVADARE to establish rules for agent behavior. Policies can prevent conflicts like resource overuse or overlapping tasks.
 
 ```
-python
 from ovadare.policies import PolicyManager, Policy
 
 policy_manager = PolicyManager()
@@ -64,7 +63,6 @@ policy_manager.add_policy(no_overlapping_tasks)
 As AutoGen agents perform actions, OVADARE detects conflicts using the registered policies.
 
 ```
-python
 # Detect conflicts based on agent activities
 conflicts = conflict_detector.detect(
     agent_id="LeadResearcher",
@@ -80,7 +78,6 @@ if conflicts:
 OVADARE generates resolutions for detected conflicts using its Resolution Engine.
 
 ```
-python
 from ovadare import ResolutionEngine
 
 resolution_engine = ResolutionEngine()
@@ -93,15 +90,18 @@ for resolution in resolutions:
     print("Applying resolution:", resolution)
 ```
 
----
+***
 
 ## Example Workflow: Sales Meeting Preparation
 
 1. **Agents:** AutoGen orchestrates agents like LeadResearcher and SalesStrategist.
+
 2. **Conflict:** Both agents attempt to access the same data resource simultaneously.
+
 3. **Detection:** OVADARE detects the resource conflict.
+
 4. **Resolution:** OVADARE generates a resolution (e.g., schedule resource access sequentially) and applies it back to AutoGen.
 
----
+***
 
 Integrating OVADARE with AutoGen bridges collaboration with intelligent conflict management, ensuring smoother workflows and better results.
