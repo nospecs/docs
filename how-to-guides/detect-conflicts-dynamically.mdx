@@ -1,0 +1,108 @@
+---
+title: Detect Conflicts Dynamically
+description: Guide to setting up real-time conflict detection in multi-agent systems with OVADARE.
+---
+
+## Introduction
+
+Dynamic conflict detection ensures that multi-agent systems operate without breakdowns by identifying issues in real-time. OVADARE integrates with platforms like AutoGen to monitor and analyze agent activities continuously, offering immediate conflict detection.
+
+## Steps for Real-Time Detection
+
+### 1. Initialize the Conflict Detector
+
+The `ConflictDetector` evaluates agent actions against defined policies to detect conflicts dynamically:
+
+```
+from ovadare.conflicts.conflict_detector import ConflictDetector
+
+conflict_detector = ConflictDetector()
+```
+
+### 2. Integrate with the Event System
+
+Connect OVADARE to the platform's event system or activity stream. For example, with AutoGen:
+
+```
+from autogen.platform import EventStream
+
+# Subscribe to agent activity events
+event_stream = EventStream()
+conflict_detector.subscribe(event_stream)
+```
+
+### 3. Handle Agent Activities
+
+OVADARE processes incoming actions and checks them for potential conflicts using the 
+```
+detect` method:
+
+`def handle_agent_action(agent_id, action):
+    conflicts = conflict_detector.detect(agent_id=agent_id, action=action)
+    if conflicts:
+        for conflict in conflicts:
+            print(f"Conflict detected: {conflict.to_dict()}")
+    else:
+        print("No conflicts detected.")
+```
+
+### 4. Resolve Detected Conflicts in Real Time
+
+When conflicts are identified, use the `ResolutionEngine` to generate and apply resolutions dynamically:
+
+```
+from ovadare.conflicts.resolution_engine import ResolutionEngine
+
+resolution_engine = ResolutionEngine()
+
+# Detect and resolve conflicts
+conflicts = conflict_detector.detect(agent_id="AgentA", action={"action": "write_data", "resource": "Dataset1"})
+if conflicts:
+    resolutions = resolution_engine.generate_resolutions(conflicts)
+    resolution_engine.apply_resolutions(resolutions)
+```
+
+### 5. Logging and Monitoring
+
+Configure logging to track conflict activity in real-time and integrate with monitoring tools for better visibility:
+
+```
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+# Attach a logger for monitoring
+conflict_detector.set_logger(logging.getLogger("ConflictLogger"))
+```
+
+## Example Workflow
+
+Here’s a step-by-step demonstration of how OVADARE detects conflicts dynamically:
+
+```
+# Initialize conflict detection
+conflict_detector = ConflictDetector()
+
+# Simulate incoming agent actions
+actions = [
+    {"agent_id": "Agent001", "action": "read_data", "resource": "Document1"},
+    {"agent_id": "Agent002", "action": "write_data", "resource": "Document1"}
+]
+
+for action in actions:
+    conflicts = conflict_detector.detect(agent_id=action["agent_id"], action=action)
+    if conflicts:
+        print(f"Conflicts detected: {[conflict.to_dict() for conflict in conflicts]}")
+    else:
+        print("No conflicts detected.")
+```
+
+## Practical Tips
+
+- **Event Stream Integration**: Use event-driven mechanisms from platforms like AutoGen for seamless agent action capture.
+- **Policy Optimization**: Ensure policies are optimized for real-time evaluation to prevent performance bottlenecks.
+- **Testing**: Test dynamic detection workflows extensively before deploying in production.
+
+## Learn More
+
+To dive deeper into OVADARE’s integration capabilities, check out **[Integrate OVADARE with AutoGen](integrate-with-autogen)**. Explore **[Resolve Multi-Agent Conflicts](resolve-multi-agent-conflicts)** for advanced conflict resolution techniques.
