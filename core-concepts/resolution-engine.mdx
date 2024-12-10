@@ -1,82 +1,117 @@
 ---
 title: Resolution Engine
-description: "How OVADARE resolves detected conflicts to maintain smooth AI agent operations."
+description: Learn how OVADARE resolves conflicts in multi-agent environments.
 ---
 
-## Resolution Engine
+## What is the Resolution Engine?
 
-The Resolution Engine is OVADARE’s core component for addressing conflicts detected in multi-agent workflows. Once a conflict is flagged, the Resolution Engine ensures appropriate measures are taken to resolve it efficiently.
+The Resolution Engine is the heart of OVADARE's conflict resolution framework. Once conflicts are detected, the engine evaluates them and generates actionable resolutions to ensure seamless agent collaboration. It operates by analyzing conflicts, applying resolution strategies, and communicating the results back to the agents or the orchestration platform.
 
-### The Role of the Resolution Engine
+---
 
-Multi-agent systems often encounter situations where conflicts must be resolved to prevent disruptions. These conflicts may arise due to:
+## Core Features of the Resolution Engine
 
-- **Resource contention**: Multiple agents attempting to access the same resource simultaneously.
-- **Policy violations**: Actions taken by an agent that breach organizational or predefined policies.
-- **Conflicting objectives**: Agents pursuing goals that are incompatible.
+### 1. **Conflict Evaluation**
+The Resolution Engine processes conflicts identified by the Conflict Detector. Each conflict is analyzed based on:
+- The policies that were violated.
+- The agents involved.
+- The context and nature of the conflict.
 
-The Resolution Engine acts as a mediator, analyzing conflicts and applying or suggesting resolutions.
+```
+from ovadare.conflicts.conflict import Conflict
+from ovadare.conflicts.resolution_engine import ResolutionEngine
 
-### How It Works
+# Create a conflict
+conflict = Conflict(
+    related_agent_id="agent_A",
+    violation_details="Unauthorized data sharing",
+    action={"action": "share_data", "resource": "sensitive_info"}
+)
 
-The Resolution Engine follows a structured process to address conflicts:
+# Initialize the Resolution Engine
+resolution_engine = ResolutionEngine()
 
-1. **Conflict Intake**: Receives detailed conflict metadata from the Conflict Detector.
-2. **Resolution Strategy Selection**: Determines the best approach to resolve the conflict based on predefined policies, historical data, and contextual analysis.
-3. **Resolution Application**: Applies the resolution dynamically or recommends an action to the user.
-4. **Feedback Loop**: Updates policies or workflows based on the resolution outcome to prevent future conflicts.
+# Generate resolutions
+resolutions = resolution_engine.generate_resolutions([conflict])
+print("Generated resolutions:", resolutions)
+```
 
-### Example Workflow: Meeting Preparation
+---
 
-Continuing with the **Meeting Preparation** scenario from the Conflict Detection example:
+### 2. **Resolution Strategies**
+The Resolution Engine applies pre-defined or custom resolution strategies to conflicts. These strategies define how conflicts are resolved, such as restricting certain actions, modifying agent behavior, or escalating issues to a human operator.
 
-#### Conflict Scenario: Resource Contention
+---
 
-The **Sales Strategist Agent** and **Product Specialist Agent** simultaneously request access to a shared analytics tool, exceeding its capacity.
+### 3. **Resolution Communication**
+Once a resolution is generated, the Resolution Engine communicates the outcome to:
+- The affected agents (to adjust their actions).
+- The orchestration platform (to update workflows).
 
-#### Resolution Steps:
+```
+from ovadare.conflicts.resolution_engine import ResolutionEngine
+from ovadare.agents.agent_registry import AgentRegistry
 
-1. **Conflict Intake**:
-   - The Resolution Engine receives metadata about the conflict (e.g., agent IDs, resource, timestamp).
-2. **Analyze Context**:
-   - Identifies the nature of the conflict as resource contention.
-3. **Apply Resolution**:
-   - Assigns prioritized access to the **Sales Strategist Agent** based on urgency and workflow rules.
-   - The **Product Specialist Agent** is queued for later access.
-4. **Feedback Update**:
-   - Updates the policy to include dynamic load balancing for shared resources.
+# Create and register agents
+registry = AgentRegistry()
+agent = registry.get_agent("agent_A")
 
-### Tools for Conflict Resolution
+# Communicate a resolution
+resolution = {
+    "conflict_id": "conflict_123",
+    "corrective_action": {
+        "action": "restrict_data_sharing",
+        "details": {"allowed_agents": ["agent_B"]}
+    }
+}
 
-OVADARE includes powerful tools to manage and resolve conflicts effectively:
+resolution_engine.apply_resolutions([resolution])
+print(f"Resolution applied to agent {agent.agent_id}")
+```
 
-<CardGroup cols={2}>
-  <Card title="Resolution Engine" icon="gavel" href="/tools/resolution-engine">
-    Explore how the Resolution Engine works in depth.
-  </Card>
+---
 
-  <Card title="Policy Manager" icon="cogs" href="/tools/policy-manager">
-    Learn how policies influence resolution strategies.
-  </Card>
-</CardGroup>
+## Example Workflow: Resolving Conflicts in Real-Time
 
-### Extending the Resolution Engine
+Here’s an example of how the Resolution Engine operates:
 
-The Resolution Engine is flexible and can be customized to meet specific needs. For example:
+1. **Conflict Detection**: A conflict is detected by the Conflict Detector.
+2. **Resolution Generation**: The Resolution Engine generates a resolution.
+3. **Action Communication**: The resolution is communicated back to the agent or orchestration platform.
 
-- **Custom Strategies**: Define unique approaches for handling conflicts based on organizational requirements.
-- **Integrations**: Connect the Resolution Engine with external tools for logging, monitoring, or escalations.
+```
+from ovadare.conflicts.conflict import Conflict
+from ovadare.conflicts.resolution_engine import ResolutionEngine
 
-### Next Steps
+# Initialize the Resolution Engine
+resolution_engine = ResolutionEngine()
 
-After resolving conflicts, OVADARE integrates seamlessly with feedback systems to continuously refine policies and workflows.
+# Simulate a conflict
+conflict = Conflict(
+    related_agent_id="agent_A",
+    violation_details="Unauthorized action attempted",
+    action={"action": "delete_file", "resource": "protected_document"}
+)
 
-<CardGroup cols={2}>
-  <Card title="Feedback Loop" icon="sync-alt" href="/core-concepts/feedback">
-    Discover how OVADARE improves over time through feedback.
-  </Card>
+# Generate and apply resolution
+resolutions = resolution_engine.generate_resolutions([conflict])
+for resolution in resolutions:
+    resolution_engine.apply_resolutions([resolution])
+    print(f"Applied resolution: {resolution.to_dict()}")
+```
 
-  <Card title="Tutorials" icon="play" href="/tutorials/meeting-preparation-with-autogen">
-    Learn how the Resolution Engine works in a real-world scenario.
-  </Card>
-</CardGroup>
+---
+
+## Customizing the Resolution Engine
+
+Developers can create custom resolution strategies to suit their specific workflows. For example:
+- Escalating unresolved conflicts to a human decision-maker.
+- Applying dynamic policies to address conflicts based on agent priorities.
+
+---
+
+## Learn More
+
+- Understand how OVADARE [detects conflicts](./conflict-detection).
+- Discover how to [define custom policies](./policies) for better control.
+- Explore [agent interactions](./agents) to monitor workflows effectively.
