@@ -3,95 +3,80 @@ title: Define Custom Policies
 description: Guide to creating and managing custom conflict policies in OVADARE.
 ---
 
-## Why Define Custom Policies?
+## Introduction
 
-Custom policies allow you to tailor conflict detection rules for your specific workflows and agent interactions. Policies ensure that AI agents operate within defined boundaries, preventing conflicts and misalignments.
+Policies in OVADARE act as guidelines for regulating agent behavior, defining boundaries, and ensuring smooth collaboration within multi-agent workflows. This guide will help you create, manage, and assign custom policies.
 
----
+## Steps to Define Custom Policies
 
-## Creating a Policy
+### 1. Initialize the Policy Manager
 
-Use OVADARE's `PolicyManager` to define and manage custom policies.
+The Policy Manager in OVADARE is responsible for handling all policy-related operations. Initialize it as follows:
 
 ```
-from ovadare.policies import PolicyManager, Policy
+from ovadare.policies.policy_manager import PolicyManager
 
-# Initialize the Policy Manager
 policy_manager = PolicyManager()
+```
 
-# Create a new policy
-no_duplicate_tasks = Policy(
-    name="NoDuplicateTasks",
+### 2. Define a New Policy
+
+Each policy is represented by a `Policy` object containing a name and a set of rules. Here's how you can create a new policy:
+
+```
+from ovadare.policies.policy import Policy
+
+data_access_policy = Policy(
+    name="DataAccessPolicy",
     rules={
-        "task_assignment": "unique_per_agent"
+        "access_level": "restricted",
+        "resource_limits": "moderate",
     }
 )
-
-# Add the policy to the manager
-policy_manager.add_policy(no_duplicate_tasks)
 ```
 
----
+### 3. Add the Policy to the Policy Manager
 
-## Managing Policies
-
-You can update, remove, or retrieve policies dynamically.
+After creating a policy, it needs to be registered with the Policy Manager:
 
 ```
-# Retrieve a specific policy
-policy = policy_manager.get_policy("NoDuplicateTasks")
-print("Retrieved Policy:", policy)
-
-# Update an existing policy
-policy_manager.update_policy(
-    name="NoDuplicateTasks",
-    rules={
-        "task_assignment": "strictly_unique_per_agent"
-    }
-)
-
-# Remove a policy
-policy_manager.remove_policy("NoDuplicateTasks")
-print("Policy removed successfully.")
+policy_manager.add_policy(data_access_policy)
 ```
 
----
+### 4. Assign Policies to Agents
 
-## Policy Rules Syntax
-
-Policies are defined as rule-based configurations using JSON-like syntax. Example rules include:
-
-- `resource_allocation`: Prevents agents from overloading system resources.
-- `task_overlap`: Ensures no two agents work on the same task simultaneously.
-- `access_level`: Limits data or system access based on agent roles.
-
-Example:
+Once defined, policies can be assigned to agents, regulating their actions. Here's an example:
 
 ```
-# Example of defining a complex policy
-complex_policy = Policy(
-    name="ComplexPolicy",
-    rules={
-        "resource_allocation": "balanced",
-        "task_overlap": "disallow",
-        "access_level": "restricted"
-    }
-)
+from ovadare.agents.agent import Agent
 
-policy_manager.add_policy(complex_policy)
+agent = Agent(agent_id="Agent001")
+agent.assign_policy(data_access_policy)
 ```
 
----
+### 5. Update or Modify Policies
 
-## Debugging and Monitoring Policies
-
-Use OVADARE's logging and monitoring tools to debug policy application and refine them over time.
+To make changes to an existing policy, update its rules and reapply it to the Policy Manager:
 
 ```
-# Monitor policies in real-time
-policy_manager.monitor_policies()
+data_access_policy.rules["access_level"] = "read-only"
+policy_manager.update_policy(data_access_policy)
 ```
 
----
+### 6. Remove a Policy
 
-Custom policies are the foundation of conflict detection and resolution in OVADARE. By defining and managing these rules, you can ensure smooth and efficient multi-agent collaboration.
+If a policy is no longer needed, it can be removed as follows:
+
+```
+policy_manager.remove_policy("DataAccessPolicy")
+```
+
+## Practical Tips
+
+- **Define Clear Objectives**: Ensure every policy has a specific purpose and aligns with organizational goals.
+- **Audit Regularly**: Periodically review policies for relevance and effectiveness.
+- **Use Descriptive Names**: Name policies meaningfully to avoid confusion during assignment.
+
+## Next Steps
+
+To see policies in action, check out the **[Conflict Detection](../core-concepts/conflict-detection)** section, which explains how OVADARE identifies conflicts using policy rules. For advanced workflows, explore **[Customize Resolution Strategies](customize-resolution-strategies)**.
