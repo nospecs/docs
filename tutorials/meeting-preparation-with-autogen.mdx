@@ -1,0 +1,110 @@
+---
+title: Meeting Preparation with AutoGen
+description: 'Learn how to use OVADARE to manage conflicts and resolutions in a multi-agent workflow designed for meeting preparation.'
+---
+
+# Meeting Preparation with AutoGen
+
+This tutorial demonstrates how to integrate OVADARE with AutoGen to orchestrate multi-agent workflows for preparing meetings while detecting and resolving conflicts.
+
+## Overview
+
+Dave is preparing for an important sales meeting and sets up multiple agents in AutoGen:
+- **Lead Researcher Agent**: Conducts research on the target company.
+- **Product Specialist Agent**: Analyzes product fit for the target.
+- **Sales Strategist Agent**: Develops a tailored sales strategy.
+- **Briefing Coordinator Agent**: Compiles a detailed meeting briefing.
+
+### Workflow
+
+The agents are tasked to:
+1. Research the target company's background and industry trends.
+2. Analyze product fit based on the research.
+3. Develop a comprehensive sales strategy.
+4. Compile all findings into a detailed briefing document.
+
+Outputs include:
+- Research reports.
+- Industry analysis.
+- Sales strategies.
+- Final briefing documents.
+
+---
+
+## Detecting Conflicts with OVADARE
+
+In this scenario, conflicts might arise if:
+- Agents compete for overlapping resources.
+- Strategies contradict each other.
+- Policies regarding sensitive data are violated.
+
+### Step 1: Setting Up OVADARE
+
+First, ensure OVADARE is integrated with AutoGen:
+```
+from ovadare.conflicts.conflict_detector import ConflictDetector
+from ovadare.policies.policy_manager import PolicyManager
+from ovadare.resolutions.resolution_engine import ResolutionEngine
+
+conflict_detector = ConflictDetector()
+policy_manager = PolicyManager()
+resolution_engine = ResolutionEngine()
+```
+
+### Step 2: Define Policies
+
+Define policies to govern agent actions:
+```
+policy_manager.add_policy({
+    'name': 'DataSensitivityPolicy',
+    'rules': {
+        'access_level': 'restricted',
+        'resource': 'confidential_documents'
+    }
+})
+```
+
+### Step 3: Monitor Agent Actions
+
+As the agents in AutoGen execute tasks, OVADARE listens for activities:
+```
+agent_actions = [
+    {'agent_id': 'lead_researcher', 'action': 'access_data', 'resource': 'confidential_documents'},
+    {'agent_id': 'sales_strategist', 'action': 'create_strategy', 'strategy': 'aggressive_pricing'}
+]
+conflicts = conflict_detector.detect(agent_actions)
+```
+
+### Step 4: Resolving Conflicts
+
+If conflicts are detected, OVADARE’s Resolution Engine generates recommendations:
+```
+if conflicts:
+    resolutions = resolution_engine.generate_resolutions(conflicts)
+    for resolution in resolutions:
+        print(f"Resolution: {resolution}")
+```
+
+### Step 5: Applying Resolutions in AutoGen
+
+Send the resolutions back to AutoGen agents:
+```
+for resolution in resolutions:
+    agent_id = resolution['agent_id']
+    action = resolution['corrective_action']
+    autogen_api.apply_resolution(agent_id, action)
+```
+
+---
+
+## Outcome
+
+By using OVADARE, Dave ensures:
+- Agents collaborate without policy violations.
+- Conflicts are resolved before disrupting workflows.
+- The meeting preparation process runs smoothly, resulting in a well-prepared team.
+
+## Next Steps
+
+- Learn more about integrating OVADARE with AutoGen in [Integrate OVADARE with AutoGen](../how-to-guides/integrate-with-autogen).
+- Explore [Custom Policies](../how-to-guides/define-custom-policies) for advanced scenarios.
