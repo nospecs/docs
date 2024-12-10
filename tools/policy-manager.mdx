@@ -1,0 +1,95 @@
+---
+title: Policy Manager
+description: Overview and usage of OVADARE's Policy Manager for defining and managing agent behavior rules.
+---
+
+## Introduction
+
+The **Policy Manager** is a critical component of OVADARE, allowing administrators to define, update, and manage policies that govern AI agent behavior. By establishing clear rules, the Policy Manager provides the foundation for detecting conflicts and ensuring harmonious multi-agent operations.
+
+## Key Features
+
+- **Dynamic Policy Updates**: Modify policies in real-time to adapt to changing requirements.
+- **Rule Enforcement**: Ensure that agents adhere to defined boundaries and expectations.
+- **Conflict Context**: Integrates with the Conflict Detector to provide relevant policy context during conflict detection.
+
+## How It Works
+
+The Policy Manager stores and evaluates policies against agent actions. When an action violates a policy, the Policy Manager communicates this violation to the Conflict Detector for further processing.
+
+## Code Example
+
+### Adding Policies
+
+Define and add policies dynamically:
+
+```
+from ovadare.policies.policy_manager import PolicyManager, Policy
+
+# Initialize Policy Manager
+policy_manager = PolicyManager()
+
+# Define a new policy
+read_policy = Policy(
+    name="ReadOnlyAccess",
+    rules={"access_level": "read"}
+)
+
+# Add the policy to the Policy Manager
+policy_manager.add_policy(read_policy)
+print(f"Policy '{read_policy.name}' added successfully.")
+```
+
+### Evaluating Policies
+
+Evaluate agent actions against defined policies:
+
+```
+action = {"access_level": "write", "resource": "RestrictedFile"}
+
+# Evaluate the action
+evaluation_result = policy_manager.evaluate_policies(action)
+
+if not evaluation_result[0].is_compliant:
+    print(f"Policy violation: {evaluation_result[0].message}")
+```
+
+### Modifying Policies
+
+Update an existing policy's rules:
+
+```
+read_policy.rules["access_level"] = "read-write"
+policy_manager.update_policy(read_policy)
+print(f"Policy '{read_policy.name}' updated successfully.")
+```
+
+### Removing Policies
+
+Remove a policy when it's no longer needed:
+
+```
+policy_manager.remove_policy(read_policy.name)
+print(f"Policy '{read_policy.name}' removed successfully.")
+```
+
+## Example Use Case
+
+**Scenario**: A company sets up policies to limit agent access based on roles.
+
+1. Define policies for "ReadOnlyAccess" and "AdminAccess."
+2. Assign policies to agents based on their roles.
+3. When an agent attempts an unauthorized action, the Policy Manager flags the violation.
+
+## Best Practices
+
+- **Define Clear Rules**: Ensure policies are unambiguous and well-documented.
+- **Test Policies**: Use simulated workflows to verify policy effectiveness.
+- **Monitor Violations**: Regularly analyze policy violations to refine rules.
+
+## Learn More
+
+Explore related topics:
+- **[Conflict Detection](conflict-detection)**: How policies are used to detect conflicts.
+- **[Customize Resolution Strategies](customize-resolution-strategies)**: Tailoring resolutions for specific policy violations.
+- **[Monitor Agent Conflicts](monitor-agent-conflicts)**: Tools for tracking and analyzing policy violations.
