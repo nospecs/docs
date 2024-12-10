@@ -1,0 +1,76 @@
+---
+title: Resolution Engine
+description: Discover how OVADARE generates and applies resolutions for detected conflicts.
+---
+
+## What is the Resolution Engine?
+
+The Resolution Engine is a core component of OVADARE, responsible for resolving conflicts between AI agents. It generates actionable solutions based on detected conflicts and applies them to ensure the system continues functioning smoothly.
+
+### Why It Matters
+
+Conflicts between agents can disrupt workflows and lead to inefficiencies. The Resolution Engine mitigates this by:
+- **Analyzing conflicts**: Determines the root cause of detected conflicts.
+- **Proposing resolutions**: Suggests corrective actions based on predefined rules or dynamic inputs.
+- **Applying resolutions**: Communicates the resolution back to the system for implementation.
+
+---
+
+## How It Works
+
+1. **Conflict Input**:
+   The Resolution Engine receives detected conflicts from the Conflict Detector.
+2. **Resolution Generation**:
+   Based on predefined rules or dynamic logic, resolutions are created to address the conflict.
+3. **Communication to Agents**:
+   The proposed resolution is applied by informing the affected agents or modifying their actions.
+
+---
+
+### Code Example
+
+Here’s how to use the Resolution Engine to resolve a detected conflict:
+
+```
+from ovadare.conflicts.resolution_engine import ResolutionEngine
+from ovadare.conflicts.conflict import Conflict
+```
+
+# Initialize the Resolution Engine
+```
+resolution_engine = ResolutionEngine()
+```
+
+# Example conflict
+```
+conflict = Conflict(
+    related_agent_id="agent1",
+    action={"type": "write", "resource": "fileA"},
+    violation_details="Resource contention with another agent",
+    policy_id="write_policy_1"
+)
+```
+
+# Generate a resolution
+```
+resolutions = resolution_engine.generate_resolutions([conflict])
+for resolution in resolutions:
+    print(f"Resolution for conflict {conflict.conflict_id}: {resolution.explanation}")
+```
+
+---
+
+## Key Features
+
+- **Dynamic Resolutions**:
+  Automatically generates resolutions tailored to specific conflicts.
+- **Agent Communication**:
+  Applies resolutions by interacting directly with agents or orchestration platforms.
+- **Customizability**:
+  Developers can define their own resolution logic and strategies.
+
+---
+
+## Next Steps
+
+Learn how to define custom rules and policies for conflicts in the [Policies](policies) section. For advanced use cases, explore [Customizing Resolution Strategies](how-to-guides/customize-resolution-strategies).
