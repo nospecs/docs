@@ -41,7 +41,7 @@
         "core-concepts/conflict-detection",
         "core-concepts/resolution-engine",
         "core-concepts/policies",
-        "core-concepts/agent-interactions",
+        "core-concepts/agents",
         "core-concepts/feedback-driven-improvement"
       ]
     },
