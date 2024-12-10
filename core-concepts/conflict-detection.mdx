@@ -1,86 +1,73 @@
 ---
 title: Conflict Detection
-description: Learn how OVADARE detects conflicts between AI agents in multi-agent workflows.
+description: "How OVADARE identifies conflicts in multi-agent workflows to ensure smooth operations."
 ---
 
-## What is Conflict Detection?
+## Conflict Detection
 
-In any multi-agent system, conflicts can arise when agents' actions or policies contradict one another. OVADARE’s Conflict Detection module identifies such scenarios by evaluating agent actions against predefined rules and policies.
+Conflict detection lies at the heart of OVADARE, enabling seamless collaboration among AI agents. By identifying policy violations, misaligned behaviors, and competing objectives, OVADARE prevents conflicts from disrupting multi-agent workflows.
 
-### Why It Matters
+### Why is Conflict Detection Important?
 
-AI agents lack social norms, moral guidelines, and hierarchical structures that humans rely on. This absence can lead to undesirable behaviors such as:
+AI agents operate autonomously but lack the inherent social norms and judgment humans rely on. This autonomy can lead to:
 
-* Overlapping tasks.
+- Policy violations (e.g., unauthorized data access).
+- Conflicting objectives (e.g., agents competing for shared resources).
+- Redundant or contradictory actions.
 
-* Resource contention.
+Conflict detection ensures multi-agent systems remain efficient and aligned with organizational goals.
 
-* Contradictory actions that impact business goals.
+### How Conflict Detection Works
 
-Conflict detection ensures a smooth and cooperative workflow in multi-agent systems.
+OVADARE leverages its **Conflict Detector** to monitor and evaluate agent actions in real time. The process involves:
 
-## How It Works
+1. **Policy Evaluation**: Actions are checked against pre-defined rules and boundaries set for each agent.
+2. **Interaction Monitoring**: Tracks agent-to-agent communication to identify potential contradictions.
+3. **Dynamic Updates**: Adapts to changing workflows and policies in runtime to maintain relevance.
 
-1. **Action Evaluation**:
-   OVADARE intercepts and evaluates actions performed by AI agents within the system.
+### Example Workflow: Meeting Preparation
 
-2. **Policy Matching**:
-   Each action is compared against a set of policies defined in the Policy Manager.
+Imagine a team of agents orchestrated via AutoGen for preparing a client meeting:
 
-3. **Conflict Identification**:
-   When an action violates a policy or overlaps with another agent's task, a conflict is flagged.
+- **Lead Researcher Agent** gathers company details and industry trends.
+- **Product Specialist Agent** prepares product-specific insights.
+- **Sales Strategist Agent** develops a custom strategy.
+- **Briefing Coordinator Agent** compiles the final document.
 
-***
+#### Conflict Scenario: Policy Violation
 
-### Code Example
+The **Lead Researcher Agent** attempts to access restricted data, violating its policy boundaries.
 
-To detect conflicts, OVADARE’s `ConflictDetector` evaluates agent actions dynamically. Here's a basic example:
+#### Conflict Detection Steps:
 
-```
-from ovadare.conflicts.conflict_detector import ConflictDetector
-```
+1. **Action Logged**: OVADARE logs the agent's attempt to access restricted data.
+2. **Policy Cross-Check**: The action is evaluated against its assigned policy.
+3. **Conflict Flagging**: A violation is flagged, and metadata (e.g., agent ID, action details, timestamp) is recorded.
 
-```
-from ovadare.policies.policy_manager import PolicyManager
-```
+### Tools for Conflict Detection
 
-# Initialize the ConflictDetector and PolicyManager
-```
-policy\_manager = PolicyManager()
-conflict\_detector = ConflictDetector(policy\_manager=policy\_manager)
-```
+OVADARE provides robust tools to support conflict detection:
 
-# Define agent actions
+<CardGroup cols={2}>
+  <Card title="Conflict Detector" icon="shield" href="/tools/conflict-detector">
+    Dive deeper into the Conflict Detector component.
+  </Card>
 
-```
-agent_actions = [
-    {"agent_id": "agent1", "action": {"type": "write", "resource": "fileA"}},
-    {"agent_id": "agent2", "action": {"type": "write", "resource": "fileA"}}
-]
-```
+  <Card title="Policy Manager" icon="cogs" href="/tools/policy-manager">
+    Learn how to define and manage agent boundaries effectively.
+  </Card>
+</CardGroup>
 
-# Detect conflicts
+### Next Steps
 
-```
-conflicts = conflict_detector.detect(agent_id="agent1", action=agent_actions[0])
-if conflicts:
-    print("Conflicts detected:", conflicts)
-else:
-    print("No conflicts detected.")
-```
+After identifying a conflict, OVADARE routes it to the **Resolution Engine**, which suggests or applies a resolution to ensure smooth operations.
 
-***
+<CardGroup cols={2}>
+  <Card title="Resolution Engine" icon="gavel" href="/core-concepts/resolution-engine">
+    Discover how OVADARE resolves conflicts.
+  </Card>
 
-## Key Features
-
-* **Real-time Analysis**: Evaluates agent actions as they occur.
-
-* **Policy Integration**: Detects violations based on rules you define.
-
-* **Action Logs**: Tracks all actions and flagged conflicts for auditing.
-
-***
-
-## Next Steps
-
-After detecting conflicts, the next step is to **resolve** them using the Resolution Engine. Learn more about resolution strategies in the [Resolution Engine](resolution-engine) section.
+  <Card title="Tutorials" icon="play" href="/tutorials/meeting-preparation-with-autogen">
+    See conflict detection in action with a real-world use case.
+  </Card>
+</CardGroup>
