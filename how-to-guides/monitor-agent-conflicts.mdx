@@ -1,0 +1,111 @@
+---
+title: Monitor Agent Conflicts
+description: Guide to tracking and analyzing conflicts in multi-agent workflows using OVADARE.
+---
+
+## Introduction
+
+Monitoring agent conflicts is essential for understanding patterns, optimizing workflows, and improving system behavior. OVADARE offers built-in tools and APIs to track, analyze, and visualize conflicts across multi-agent platforms like AutoGen and CrewAI.
+
+## Monitoring Workflow
+
+### 1. Enable Conflict Tracking
+
+Use the `ConflictDetector` to capture conflicts dynamically during agent interactions:
+
+```
+from ovadare.conflicts.conflict_detector import ConflictDetector
+
+conflict_detector = ConflictDetector()
+
+# Example agent action
+conflicts = conflict_detector.detect(
+    agent_id="Agent001",
+    action={"action": "access_data", "resource": "SensitiveDoc"}
+)
+
+if conflicts:
+    print(f"Conflicts detected: {[conflict.to_dict() for conflict in conflicts]}")
+```
+
+### 2. Log Conflicts
+
+Store detected conflicts for future analysis. OVADARE provides persistent conflict storage for long-term monitoring:
+
+```
+conflict_log = conflict_detector.get_all_conflicts()
+
+for conflict in conflict_log:
+    print(f"Logged Conflict: {conflict.to_dict()}")
+```
+
+### 3. Visualize Conflicts (Optional)
+
+Integrate OVADARE with visualization tools to create dashboards or charts for better insights into agent conflicts:
+
+```
+import matplotlib.pyplot as plt
+
+conflict_count = len(conflict_log)
+labels = [conflict.related_agent_id for conflict in conflict_log]
+values = [1 for _ in conflict_log]
+
+plt.bar(labels, values)
+plt.title("Conflict Frequency by Agent")
+plt.xlabel("Agents")
+plt.ylabel("Conflicts")
+plt.show()
+```
+
+### 4. Analyze Conflict Trends
+
+Extract patterns from logged conflicts to identify recurring issues:
+
+```
+from collections import Counter
+
+agent_conflict_count = Counter(conflict.related_agent_id for conflict in conflict_log)
+
+print("Conflict frequency by agent:", agent_conflict_count)
+```
+
+### 5. Use Monitoring APIs
+
+Integrate OVADARE’s APIs for programmatic access to conflict data:
+
+```
+conflict = conflict_detector.get_conflict_by_id("Conflict001")
+
+if conflict:
+    print(f"Details of Conflict: {conflict.to_dict()}")
+else:
+    print("No conflict found with the given ID.")
+```
+
+## Example Use Case
+
+Monitor conflicts in a multi-agent collaboration setup:
+
+```
+conflicts = conflict_detector.detect(
+    agent_id="ResearchAgent",
+    action={"action": "write_data", "resource": "SharedReport"}
+)
+
+if conflicts:
+    for conflict in conflicts:
+        print(f"Conflict detected: {conflict.to_dict()}")
+```
+
+## Tips for Effective Monitoring
+
+- **Use Dashboards**: Combine OVADARE with tools like Grafana or Tableau for real-time conflict tracking.
+- **Set Alerts**: Notify administrators when critical conflicts are detected using custom alert systems.
+- **Review Periodically**: Regularly analyze conflict data to refine policies and agent behavior.
+
+## Learn More
+
+Explore related topics:
+- **[Conflict Detection](conflict-detection)**: Understand how OVADARE detects conflicts.
+- **[Define Custom Policies](define-custom-policies)**: Improve monitoring by refining agent rules.
+- **[Resolution Engine](resolution-engine)**: Automate conflict resolution based on detected patterns.
