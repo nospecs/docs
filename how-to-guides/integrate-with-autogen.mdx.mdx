@@ -1,151 +1,107 @@
 ---
 title: Integrate OVADARE with AutoGen
-description: Learn how to integrate OVADARE with AutoGen for enhanced conflict detection and resolution in multi-agent workflows.
+description: Step-by-step guide to integrate OVADARE with AutoGen.
 ---
 
 ## Why Integrate OVADARE with AutoGen?
 
-AutoGen is a powerful platform for orchestrating multi-agent workflows, enabling collaboration across diverse AI agents. However, in complex scenarios, conflicts between agents can arise, such as policy violations, redundant actions, or misaligned goals. OVADARE complements AutoGen by introducing conflict detection, resolution, and policy management to streamline agent collaboration.
+AutoGen focuses on multi-agent orchestration and collaboration. By integrating OVADARE, you gain the ability to detect and resolve conflicts between agents, ensuring seamless workflows and preventing bottlenecks.
+
+---
 
 ## Prerequisites
 
-1. **AutoGen Setup**:
-   Ensure AutoGen is installed and configured in your environment. Refer to [AutoGen’s documentation](https://autogen.com/docs) for setup instructions.
+- **AutoGen installed:** Follow [AutoGen Installation Guide](https://docs.autogen.com/install).
+- **OVADARE installed:** Refer to our [Installation Guide](/get-started/installation).
 
-2. **OVADARE Installation**:
-   If OVADARE isn’t installed, follow the [installation guide](/installation) to set it up.
+---
 
-3. **Python Version**:
-   Ensure you’re using Python 3.7 or higher.
+## Integration Steps
 
-4. **Dependencies**:
-   Install necessary packages:
-   `pip install autogen`
+### 1. Configure AutoGen to Notify OVADARE of Agent Activities
 
-***
-
-## Step 1: Define Your Agents in AutoGen
-
-Begin by setting up the AI agents in AutoGen for your workflow. Here’s an example for a meeting preparation use case:
+AutoGen uses event hooks to allow external systems like OVADARE to monitor agent activities. Update your AutoGen configuration to send agent events to OVADARE.
 
 ```
 python
-from autogen import AssistantAgent, TaskManager
+from autogen import AgentManager
+from ovadare import ConflictDetector
 
-lead_researcher_agent = AssistantAgent(name="LeadResearcher")
-product_specialist_agent = AssistantAgent(name="ProductSpecialist")
-sales_strategist_agent = AssistantAgent(name="SalesStrategist")
-briefing_coordinator_agent = AssistantAgent(name="BriefingCoordinator")
+# Initialize AutoGen agents
+manager = AgentManager()
+
+# Example agents
+lead_researcher = manager.create_agent("LeadResearcher")
+sales_strategist = manager.create_agent("SalesStrategist")
+
+# Initialize OVADARE Conflict Detector
+conflict_detector = ConflictDetector()
+
+# Register OVADARE as an event listener
+manager.register_event_listener(conflict_detector.handle_agent_activity)
 ```
 
-***
+### 2. Set Policies in OVADARE
 
-## Step 2: Initialize OVADARE for Conflict Detection
-
-Import and initialize the core OVADARE components in your project:
+Define policies in OVADARE to establish rules for agent behavior. Policies can prevent conflicts like resource overuse or overlapping tasks.
 
 ```
 python
-from ovadare import ConflictDetector, PolicyManager, ResolutionEngine
+from ovadare.policies import PolicyManager, Policy
 
-# Initialize components
 policy_manager = PolicyManager()
-conflict_detector = ConflictDetector(policy_manager=policy_manager)
-resolution_engine = ResolutionEngine()
+
+# Define and add a sample policy
+no_overlapping_tasks = Policy(
+    name="NoOverlappingTasks",
+    rules={"task_overlap": "disallow"}
+)
+policy_manager.add_policy(no_overlapping_tasks)
 ```
 
-***
+### 3. Detect Conflicts
 
-## Step 3: Configure Policies in OVADARE
-
-Define rules for agents to ensure harmonious collaboration:
+As AutoGen agents perform actions, OVADARE detects conflicts using the registered policies.
 
 ```
 python
-policy_manager.add_policy(
-    name="NoDuplicateResearch",
-    rules={"action": "research", "resource": "target_company", "limit": 1}
+# Detect conflicts based on agent activities
+conflicts = conflict_detector.detect(
+    agent_id="LeadResearcher",
+    action={"type": "analyze_data", "resource": "Dataset1"}
 )
 
-policy_manager.add_policy(
-    name="ReadOnlyAccess",
-    rules={"agent": "LeadResearcher", "action": "modify", "permission": "deny"}
-)
-```
-
-***
-
-## Step 4: Enable Real-Time Conflict Detection
-
-Integrate OVADARE’s `ConflictDetector` to monitor and analyze agent actions during workflows:
-
-```
-python
-def monitor_agent_actions():
-    actions = [
-        {"agent": "LeadResearcher", "action": "research", "resource": "target_company"},
-        {"agent": "ProductSpecialist", "action": "research", "resource": "target_company"},
-    ]
-
-    conflicts = conflict_detector.detect(agent_actions=actions)
-
-    if conflicts:
-        print("Conflicts detected:", conflicts)
-```
-
-***
-
-## Step 5: Resolve Detected Conflicts
-
-Use the `ResolutionEngine` to generate and apply resolutions for conflicts:
-
-```
-python
 if conflicts:
-    resolutions = resolution_engine.generate_resolutions(conflicts)
-    for resolution in resolutions:
-        resolution_engine.apply_resolution(resolution)
-        print("Applied resolution:", resolution)
+    print("Conflicts detected:", conflicts)
 ```
 
-***
+### 4. Resolve Conflicts
 
-## Step 6: Observe Results in AutoGen
-
-With conflicts detected and resolved, your AutoGen workflow will proceed seamlessly. Monitor agent interactions to verify improved collaboration and efficiency.
-
-***
-
-## Example: End-to-End Integration
-
-Here’s how OVADARE and AutoGen work together for the meeting preparation use case:
+OVADARE generates resolutions for detected conflicts using its Resolution Engine.
 
 ```
 python
-# Set up agents
-agents = [lead_researcher_agent, product_specialist_agent, sales_strategist_agent, briefing_coordinator_agent]
+from ovadare import ResolutionEngine
 
-# Simulate workflow
-task_manager = TaskManager(agents=agents)
-task_manager.execute()
+resolution_engine = ResolutionEngine()
 
-# Detect and resolve conflicts
-actions = task_manager.get_actions()
-conflicts = conflict_detector.detect(agent_actions=actions)
+# Resolve detected conflicts
 resolutions = resolution_engine.generate_resolutions(conflicts)
+
+# Apply resolutions (e.g., notify agents or adjust actions)
 for resolution in resolutions:
-    resolution_engine.apply_resolution(resolution)
+    print("Applying resolution:", resolution)
 ```
 
-***
+---
 
-## Key Benefits of Integration
+## Example Workflow: Sales Meeting Preparation
 
-1. **Enhanced Collaboration**:
-   Prevent conflicts and ensure agents work towards shared objectives.
+1. **Agents:** AutoGen orchestrates agents like LeadResearcher and SalesStrategist.
+2. **Conflict:** Both agents attempt to access the same data resource simultaneously.
+3. **Detection:** OVADARE detects the resource conflict.
+4. **Resolution:** OVADARE generates a resolution (e.g., schedule resource access sequentially) and applies it back to AutoGen.
 
-2. **Efficient Workflows**:
-   Minimize redundancies and policy violations.
+---
 
-3. **Actionable Insights**:
-   Gain visibility into agent actions and potential misalignments.
+Integrating OVADARE with AutoGen bridges collaboration with intelligent conflict management, ensuring smoother workflows and better results.
