@@ -1,85 +1,104 @@
 ---
 title: Agents
-description: Understand the role of agents in OVADARE and their integration with multi-agent platforms.
+description: "Learn how agents interact with OVADARE to facilitate conflict detection and resolution."
 ---
 
-## What are Agents?
+Agents are the core participants in any multi-agent orchestration system. In OVADARE, they are defined, monitored, and evaluated to ensure smooth interactions and compliance with predefined policies. Unlike in orchestration platforms like AutoGen, where agents perform tasks and execute workflows, OVADARE focuses on their interactions and adherence to rules.
 
-Agents are autonomous entities that perform specific tasks or actions within a multi-agent system. In OVADARE, agents are central to workflows, and their interactions are managed to ensure smooth operations without conflicts.
+## **What Are Agents in OVADARE?**
 
-### Types of Agents
+In OVADARE, agents represent entities whose actions and interactions are monitored for conflicts. OVADARE doesn’t replace agent definitions from orchestration platforms but works alongside them to:
 
-Agents in OVADARE can take on various roles depending on the platform and workflow. Examples include:
+- Monitor agent activities.
+- Evaluate their actions against policies.
+- Detect conflicts between agents.
+- Propose resolutions for smooth collaboration.
 
-* **Lead Researcher Agent**: Gathers data on a target.
+## **Agent Components in OVADARE**
 
-* **Sales Strategist Agent**: Designs sales approaches.
+OVADARE provides several components to manage agents:
 
-* **Briefing Coordinator Agent**: Prepares summaries for team meetings.
+- **`agent.py`:** Defines the `Agent` class, which represents an agent’s capabilities and status.
+- **`agent_interface.py`:** Provides the abstract interface that all agents in OVADARE must adhere to.
+- **`agent_registry.py`:** A centralized registry for managing agents and their metadata.
+- **`agent_sdk.py`:** A utility for platforms like AutoGen to report agent activities and apply resolutions.
 
-***
+## **Do You Need to Define Agents in OVADARE?**
 
-## Integrating Agents with OVADARE
+No. Agents are defined in orchestration platforms like AutoGen. However, they must be **registered** in OVADARE for conflict detection and resolution. Registration involves specifying:
 
-### Initialization
+- **Agent ID:** A unique identifier.
+- **Capabilities:** The actions the agent is allowed to perform.
 
-Agents are registered with OVADARE during initialization, allowing the framework to monitor and manage their interactions.
-
-```
-from ovadare.agents.agent import Agent
-```
-
-# Initialize an agent
-
-```
-agent_a = Agent(agent_id="AgentA")
-agent_b = Agent(agent_id="AgentB")
-
-print(f"Agents initialized: {agent_a.agent_id}, {agent_b.agent_id}")
-```
-
-***
-
-### Managing Agent Policies
-
-Agents operate based on assigned policies that define their boundaries. These policies ensure they perform tasks without stepping into restricted areas.
+### **Registering an Agent**
+You can register agents programmatically using the `AgentRegistry`:
 
 ```
-from ovadare.policies.policy_manager import PolicyManager
+python
+from ovadare.agents.agent_registry import AgentRegistry
+
+registry = AgentRegistry()
+registry.register_agent(
+    agent_id="sales_agent_01",
+    capabilities=["read", "write"]
+)
 ```
 
-# Assign policies to agents
-```
-policy\_manager = PolicyManager()
-policy\_manager.add\_policy(read\_only\_policy)
-policy\_manager.assign\_policy(agent\_a.agent\_id, "ReadOnlyPolicy")
-\`\`
-```
-***
+This ensures OVADARE knows about the agent and its boundaries.
 
-### Interactions and Conflicts
+---
 
-Agents interact with each other during workflows, which can sometimes result in conflicts (e.g., overlapping actions or resource contention). OVADARE detects these conflicts and resolves them based on predefined rules.
+## **Agent Interaction Workflow**
 
-***
-
-## Monitoring Agent Behavior
-
-OVADARE provides tools to monitor agent activity and their adherence to policies.
+### **Step 1: AutoGen Reports Activity**
+The orchestration platform (e.g., AutoGen) sends agent activities to OVADARE using the SDK:
 
 ```
-from ovadare.monitoring.agent_monitor import AgentMonitor
+python
+from ovadare.agent_sdk import report_action
+
+report_action(
+    agent_id="sales_agent_01",
+    action={"type": "update", "resource": "client_data", "timestamp": 1700001234}
+)
 ```
 
-# Monitor agent behavior
-```
-monitor = AgentMonitor()
-monitor.track\_agent(agent\_a.agent\_id)
-monitor.generate\_report(agent\_a.agent\_id)
-\`\`
-```
-***
+### **Step 2: Conflict Detection**
+OVADARE evaluates the action against its policies and checks for conflicts.
 
-## Next Steps
+### **Step 3: Resolution**
+If a conflict is detected, OVADARE generates a resolution and sends it back to AutoGen.
 
-Learn more about how agents interact with platforms in the [Agent Interactions](core-concepts/agent-interactions) section. To see how OVADARE detects conflicts between agents, visit [Conflict Detection](core-concepts/conflict-detection).
+---
+
+## **Agent Boundaries**
+
+Agent boundaries in OVADARE are defined through **policies**. For example, a policy might restrict an agent to only “read” operations on certain resources. OVADARE uses these boundaries during conflict detection to evaluate compliance.
+
+---
+
+## **Examples**
+
+### **Scenario: Lead Researcher Agent**
+An AutoGen-defined agent `lead_researcher_agent` is registered in OVADARE to monitor its activities.
+
+```
+python
+# Register the agent in OVADARE
+registry.register_agent(
+    agent_id="lead_researcher_agent",
+    capabilities=["read"]
+)
+
+# Report an action to OVADARE
+report_action(
+    agent_id="lead_researcher_agent",
+    action={"type": "write", "resource": "research_notes"}
+)
+```
+
+If the agent attempts to perform a `write` action but is only allowed to `read`, OVADARE detects the conflict and flags it for resolution.
+
+---
+
+By focusing on interactions and compliance, OVADARE ensures a seamless and conflict-free environment for multi-agent systems.
