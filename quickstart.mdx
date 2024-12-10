@@ -13,13 +13,13 @@ Get started with OVADARE in minutes by following this quick setup example. Detec
 
 Ensure OVADARE is installed using pip:
 
-`pip install ovadare`
+```pip install ovadare```
 
 ### Step 2: Import the Framework
 
 Import OVADARE into your Python project:
 
-`from ovadare import ConflictDetector, ResolutionEngine`
+```from ovadare import ConflictDetector, ResolutionEngine```
 
 ### Step 3: Define Your Policies
 
@@ -27,7 +27,7 @@ Create custom conflict policies to govern agent interactions:
 
 ```from ovadare.policies.policy_manager import Policy```
 
-```policy = Policy(
+``` policy = Policy(
     name='WriteAccessPolicy',
     rules={
         'resource_limits': 'moderate',
