@@ -1,0 +1,153 @@
+---
+title: Integrate OVADARE with AutoGen
+description: Learn how to integrate OVADARE with AutoGen for enhanced conflict detection and resolution in multi-agent workflows.
+---
+
+## Why Integrate OVADARE with AutoGen?
+
+AutoGen is a powerful platform for orchestrating multi-agent workflows, enabling collaboration across diverse AI agents. However, in complex scenarios, conflicts between agents can arise, such as policy violations, redundant actions, or misaligned goals. OVADARE complements AutoGen by introducing conflict detection, resolution, and policy management to streamline agent collaboration.
+
+## Prerequisites
+
+1. **AutoGen Setup**:
+   Ensure AutoGen is installed and configured in your environment. Refer to [AutoGen’s documentation](https://autogen.com/docs) for setup instructions.
+
+2. **OVADARE Installation**:
+   If OVADARE isn’t installed, follow the [installation guide](/installation) to set it up.
+
+3. **Python Version**:
+   Ensure you’re using Python 3.7 or higher.
+
+4. **Dependencies**:
+   Install necessary packages:
+   `pip install autogen`
+
+---
+
+## Step 1: Define Your Agents in AutoGen
+
+Begin by setting up the AI agents in AutoGen for your workflow. Here’s an example for a meeting preparation use case:
+
+```
+python
+from autogen import AssistantAgent, TaskManager
+
+lead_researcher_agent = AssistantAgent(name="LeadResearcher")
+product_specialist_agent = AssistantAgent(name="ProductSpecialist")
+sales_strategist_agent = AssistantAgent(name="SalesStrategist")
+briefing_coordinator_agent = AssistantAgent(name="BriefingCoordinator")
+```
+
+---
+
+## Step 2: Initialize OVADARE for Conflict Detection
+
+Import and initialize the core OVADARE components in your project:
+
+```
+python
+from ovadare import ConflictDetector, PolicyManager, ResolutionEngine
+
+# Initialize components
+policy_manager = PolicyManager()
+conflict_detector = ConflictDetector(policy_manager=policy_manager)
+resolution_engine = ResolutionEngine()
+```
+
+---
+
+## Step 3: Configure Policies in OVADARE
+
+Define rules for agents to ensure harmonious collaboration:
+
+```
+python
+policy_manager.add_policy(
+    name="NoDuplicateResearch",
+    rules={"action": "research", "resource": "target_company", "limit": 1}
+)
+
+policy_manager.add_policy(
+    name="ReadOnlyAccess",
+    rules={"agent": "LeadResearcher", "action": "modify", "permission": "deny"}
+)
+```
+
+---
+
+## Step 4: Enable Real-Time Conflict Detection
+
+Integrate OVADARE’s `ConflictDetector` to monitor and analyze agent actions during workflows:
+
+```
+python
+def monitor_agent_actions():
+    actions = [
+        {"agent": "LeadResearcher", "action": "research", "resource": "target_company"},
+        {"agent": "ProductSpecialist", "action": "research", "resource": "target_company"},
+    ]
+
+    conflicts = conflict_detector.detect(agent_actions=actions)
+
+    if conflicts:
+        print("Conflicts detected:", conflicts)
+```
+
+---
+
+## Step 5: Resolve Detected Conflicts
+
+Use the `ResolutionEngine` to generate and apply resolutions for conflicts:
+
+```
+python
+if conflicts:
+    resolutions = resolution_engine.generate_resolutions(conflicts)
+    for resolution in resolutions:
+        resolution_engine.apply_resolution(resolution)
+        print("Applied resolution:", resolution)
+```
+
+---
+
+## Step 6: Observe Results in AutoGen
+
+With conflicts detected and resolved, your AutoGen workflow will proceed seamlessly. Monitor agent interactions to verify improved collaboration and efficiency.
+
+---
+
+## Example: End-to-End Integration
+
+Here’s how OVADARE and AutoGen work together for the meeting preparation use case:
+
+```
+python
+# Set up agents
+agents = [lead_researcher_agent, product_specialist_agent, sales_strategist_agent, briefing_coordinator_agent]
+
+# Simulate workflow
+task_manager = TaskManager(agents=agents)
+task_manager.execute()
+
+# Detect and resolve conflicts
+actions = task_manager.get_actions()
+conflicts = conflict_detector.detect(agent_actions=actions)
+resolutions = resolution_engine.generate_resolutions(conflicts)
+for resolution in resolutions:
+    resolution_engine.apply_resolution(resolution)
+```
+
+---
+
+## Key Benefits of Integration
+
+1. **Enhanced Collaboration**:
+   Prevent conflicts and ensure agents work towards shared objectives.
+
+2. **Efficient Workflows**:
+   Minimize redundancies and policy violations.
+
+3. **Actionable Insights**:
+   Gain visibility into agent actions and potential misalignments.
+
+For more advanced guides, explore our [How-to Guides](/how-to-guides).
