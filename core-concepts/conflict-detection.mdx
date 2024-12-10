@@ -10,22 +10,27 @@ In any multi-agent system, conflicts can arise when agents' actions or policies 
 ### Why It Matters
 
 AI agents lack social norms, moral guidelines, and hierarchical structures that humans rely on. This absence can lead to undesirable behaviors such as:
-- Overlapping tasks.
-- Resource contention.
-- Contradictory actions that impact business goals.
+
+* Overlapping tasks.
+
+* Resource contention.
+
+* Contradictory actions that impact business goals.
 
 Conflict detection ensures a smooth and cooperative workflow in multi-agent systems.
 
 ## How It Works
 
-1. **Action Evaluation**: 
+1. **Action Evaluation**:
    OVADARE intercepts and evaluates actions performed by AI agents within the system.
-2. **Policy Matching**: 
+
+2. **Policy Matching**:
    Each action is compared against a set of policies defined in the Policy Manager.
-3. **Conflict Identification**: 
+
+3. **Conflict Identification**:
    When an action violates a policy or overlaps with another agent's task, a conflict is flagged.
 
----
+***
 
 ### Code Example
 
@@ -34,15 +39,19 @@ To detect conflicts, OVADARE’s `ConflictDetector` evaluates agent actions dyna
 ```
 from ovadare.conflicts.conflict_detector import ConflictDetector
 ```
+
 ```
 from ovadare.policies.policy_manager import PolicyManager
 ```
 
 # Initialize the ConflictDetector and PolicyManager
-policy_manager = PolicyManager()
-conflict_detector = ConflictDetector(policy_manager=policy_manager)
+```
+policy\_manager = PolicyManager()
+conflict\_detector = ConflictDetector(policy\_manager=policy\_manager)
+```
 
 # Define agent actions
+
 ```
 agent_actions = [
     {"agent_id": "agent1", "action": {"type": "write", "resource": "fileA"}},
@@ -51,6 +60,7 @@ agent_actions = [
 ```
 
 # Detect conflicts
+
 ```
 conflicts = conflict_detector.detect(agent_id="agent1", action=agent_actions[0])
 if conflicts:
@@ -59,15 +69,17 @@ else:
     print("No conflicts detected.")
 ```
 
----
+***
 
 ## Key Features
 
-- **Real-time Analysis**: Evaluates agent actions as they occur.
-- **Policy Integration**: Detects violations based on rules you define.
-- **Action Logs**: Tracks all actions and flagged conflicts for auditing.
+* **Real-time Analysis**: Evaluates agent actions as they occur.
 
----
+* **Policy Integration**: Detects violations based on rules you define.
+
+* **Action Logs**: Tracks all actions and flagged conflicts for auditing.
+
+***
 
 ## Next Steps
 
