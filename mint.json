@@ -98,5 +98,8 @@
     "x": "https://x.com/ovadare",
     "github": "https://github.com/nospecs/ovadare",
     "linkedin": "https://linkedin.com/company/ovadare"
-  }
+  },
+  "customStyles": [
+    "/style.css"
+  ]
 }
