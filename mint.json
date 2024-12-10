@@ -68,6 +68,15 @@
         "core-concepts/platforms",
         "core-concepts/agent-interactions"
       ]
+            "group": "How-to Guides",
+      "pages": [
+        "how-to-guides/integrate-with-autogen",
+        "how-to-guides/define-custom-policies",
+        "how-to-guides/resolve-multi-agent-conflicts",
+        "how-to-guides/detect-conflicts-dynamically",
+        "how-to-guides/customize-resolution-strategies",
+        "how-to-guides/monitor-agent-conflicts"
+      ]
     },
     {
       "group": "How-to Guides",
