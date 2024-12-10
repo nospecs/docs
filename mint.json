@@ -7,12 +7,12 @@
   },
   "favicon": "/logo/light.svg",
   "colors": {
-    "primary": "linear-gradient(90deg, #FFD700, #000000)",
-    "light": "#FFD700",
+    "primary": "#000000",
+    "light": "#FFFFFF",
     "dark": "#000000",
     "anchors": {
-      "from": "linear-gradient(90deg, #FFD700, #000000)",
-      "to": "linear-gradient(90deg, #000000, #FFD700)"
+      "from": "#000000",
+      "to": "#FFFFFF"
     }
   },
   "topbarLinks": [
@@ -23,11 +23,7 @@
   ],
   "topbarCtaButton": {
     "name": "Get Started",
-    "url": "https://github.com/nospecs/ovadare",
-    "style": {
-      "background": "linear-gradient(90deg, #FFD700, #000000)",
-      "color": "#FFFFFF"
-    }
+    "url": "https://github.com/nospecs/ovadare"
   },
   "tabs": [
     {
