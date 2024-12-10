@@ -1,0 +1,81 @@
+---
+title: Troubleshooting
+description: A guide to resolve common issues when using OVADARE.
+---
+
+## Overview
+
+This guide covers the most common challenges developers face when working with OVADARE and offers solutions to address them effectively.
+
+---
+
+## Common Issues and Solutions
+
+### 1. **Conflict Detection Not Triggering**
+#### **Symptom**:
+- No conflicts are being detected, even when agents act against defined policies.
+
+#### **Possible Causes**:
+1. Policies are not properly defined or loaded.
+2. The integration between OVADARE and the multi-agent platform (e.g., AutoGen) is incomplete.
+3. Agent actions are not being properly reported to OVADARE.
+
+#### **Solution**:
+- Ensure policies are defined and loaded using the **Policy Manager**:
+  ```
+  policy_manager.load_policies_from_file("path/to/policies.json")
+  ```
+- Verify that the multi-agent platform is configured to send action data to OVADARE.
+  Example for AutoGen:
+  `ovadare_instance.track(agent_actions)`
+- Test with a minimal setup to confirm the conflict detection pipeline works.
+
+---
+
+### 2. **Resolution Engine Not Responding**
+#### **Symptom**:
+- Detected conflicts are not being resolved, or resolutions are not applied to agents.
+
+#### **Possible Causes**:
+1. The **Resolution Engine** is not properly initialized.
+2. Agents are not receiving or applying resolutions.
+
+#### **Solution**:
+- Ensure the Resolution Engine is initialized and connected:
+  `resolution_engine = ResolutionEngine(agent_registry)`
+- Verify agent-side handling of resolutions:
+  - Agents should implement the `handle_resolution()` method from the **Agent Interface**.
+  Example:
+  `agent.handle_resolution(resolution)`
+- Check logs for errors or misconfigurations.
+
+---
+
+### 3. **Agent Communication Issues**
+#### **Symptom**:
+- Agents fail to communicate or collaborate as expected.
+
+#### **Possible Causes**:
+1. Missing or incompatible protocols between agents.
+2. Policy restrictions inadvertently blocking agent communication.
+
+#### **Solution**:
+- Review the agent communication setup in the multi-agent platform.
+- Use the **Agent Interaction Visualizer** to identify communication bottlenecks.
+- Update or relax relevant policies using the Policy Manager:
+  ```
+  policy_manager.update_policy("communication_rules", new_rules)
+  ```
+
+---
+
+### 4. **Integration with AutoGen Failing**
+#### **Symptom**:
+- OVADARE is not detecting or resolving conflicts when integrated with AutoGen.
+
+#### **Possible Causes**:
+1. Incorrect AutoGen configuration for OVADARE integration.
+2. Agent actions are not properly reported.
+
+#### **Solution**:
+- Confirm that AutoGen’s actions are being logged and reported to OVADARE:
