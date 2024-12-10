@@ -42,13 +42,15 @@ policy = Policy(
 Set up the main components of OVADARE:
 
 ```conflict_detector = ConflictDetector()```
+
 ```resolution_engine = ResolutionEngine()```
 
 ### Step 5: Simulate an Agent Workflow
 
 Detect conflicts between agents in a simulated workflow:
 
-```agent_action = {
+```
+agent_action = {
     'agent_id': 'lead_researcher_agent',
     'action': 'write_data',
     'resource': 'CompanyDatabase'
@@ -56,7 +58,8 @@ Detect conflicts between agents in a simulated workflow:
 
 ```conflicts = conflict_detector.detect(agent_action['agent_id'], agent_action)```
 
-```if conflicts:
+```
+if conflicts:
     print(f"Conflicts detected: {len(conflicts)}")
 else:
     print("No conflicts detected.")```
