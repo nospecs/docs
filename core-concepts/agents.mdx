@@ -1,0 +1,79 @@
+---
+title: Agents
+description: Understand the role of agents in OVADARE and their integration with multi-agent platforms.
+---
+
+## What are Agents?
+
+Agents are autonomous entities that perform specific tasks or actions within a multi-agent system. In OVADARE, agents are central to workflows, and their interactions are managed to ensure smooth operations without conflicts.
+
+### Types of Agents
+
+Agents in OVADARE can take on various roles depending on the platform and workflow. Examples include:
+- **Lead Researcher Agent**: Gathers data on a target.
+- **Sales Strategist Agent**: Designs sales approaches.
+- **Briefing Coordinator Agent**: Prepares summaries for team meetings.
+
+---
+
+## Integrating Agents with OVADARE
+
+### Initialization
+
+Agents are registered with OVADARE during initialization, allowing the framework to monitor and manage their interactions.
+
+```
+from ovadare.agents.agent import Agent
+```
+
+# Initialize an agent
+```
+agent_a = Agent(agent_id="AgentA")
+agent_b = Agent(agent_id="AgentB")
+
+print(f"Agents initialized: {agent_a.agent_id}, {agent_b.agent_id}")
+```
+
+---
+
+### Managing Agent Policies
+
+Agents operate based on assigned policies that define their boundaries. These policies ensure they perform tasks without stepping into restricted areas.
+
+```
+from ovadare.policies.policy_manager import PolicyManager
+```
+
+# Assign policies to agents
+policy_manager = PolicyManager()
+policy_manager.add_policy(read_only_policy)
+policy_manager.assign_policy(agent_a.agent_id, "ReadOnlyPolicy")
+``
+
+---
+
+### Interactions and Conflicts
+
+Agents interact with each other during workflows, which can sometimes result in conflicts (e.g., overlapping actions or resource contention). OVADARE detects these conflicts and resolves them based on predefined rules.
+
+---
+
+## Monitoring Agent Behavior
+
+OVADARE provides tools to monitor agent activity and their adherence to policies.
+
+```
+from ovadare.monitoring.agent_monitor import AgentMonitor
+```
+
+# Monitor agent behavior
+monitor = AgentMonitor()
+monitor.track_agent(agent_a.agent_id)
+monitor.generate_report(agent_a.agent_id)
+``
+
+---
+
+## Next Steps
+
+Learn more about how agents interact with platforms in the [Agent Interactions](core-concepts/agent-interactions) section. To see how OVADARE detects conflicts between agents, visit [Conflict Detection](core-concepts/conflict-detection).
