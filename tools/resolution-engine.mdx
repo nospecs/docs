@@ -1,0 +1,93 @@
+---
+title: Resolution Engine
+description: Overview and usage of OVADARE's Resolution Engine for resolving conflicts in multi-agent systems.
+---
+
+## Introduction
+
+The **Resolution Engine** in OVADARE automates the resolution of detected conflicts within multi-agent workflows. By providing actionable recommendations or enforcing predefined solutions, the Resolution Engine ensures smooth collaboration and prevents disruptions caused by unresolved conflicts.
+
+## How It Works
+
+The Resolution Engine works by analyzing detected conflicts and generating resolutions. It communicates the resolutions to the relevant agents or systems, ensuring that conflicts are addressed efficiently and effectively.
+
+## Key Features
+
+- **Automated Resolutions**: Automatically generates resolutions for conflicts.
+- **Customizable Strategies**: Supports custom resolution strategies for specific use cases.
+- **Integration with Agents**: Communicates resolutions directly to the relevant agents.
+
+## Code Example
+
+### Generating Resolutions
+
+Use the following code to generate resolutions for detected conflicts:
+
+```
+from ovadare.conflicts.resolution_engine import ResolutionEngine
+from ovadare.agents.agent_registry import AgentRegistry
+from ovadare.conflicts.conflict import Conflict
+
+# Initialize Agent Registry and Resolution Engine
+agent_registry = AgentRegistry()
+resolution_engine = ResolutionEngine(agent_registry=agent_registry)
+
+# Example conflict
+conflict = Conflict(
+    related_agent_id="Agent001",
+    action={"type": "modify", "resource": "RestrictedFile"},
+    violation_details="Access denied by policy.",
+    policy_id="Policy001"
+)
+
+# Generate resolutions
+resolutions = resolution_engine.generate_resolutions([conflict])
+
+if resolutions:
+    print("Generated Resolutions:")
+    for resolution in resolutions:
+        print(resolution.to_dict())
+```
+
+### Applying Resolutions
+
+Once resolutions are generated, apply them to resolve conflicts:
+
+```
+resolution_engine.apply_resolutions(resolutions)
+print("Resolutions applied successfully.")
+```
+
+### Customizing Resolution Logic
+
+You can define custom resolution logic by extending the Resolution Engine:
+
+```
+class CustomResolutionEngine(ResolutionEngine):
+    def _create_resolution(self, conflict):
+        # Custom resolution logic
+        resolution = super()._create_resolution(conflict)
+        resolution.explanation += " [Customized]"
+        return resolution
+```
+
+## Example Use Case
+
+**Scenario**: An agent tries to modify a restricted file.
+
+- **Step 1**: The Resolution Engine generates a resolution recommending the agent's access rights be downgraded or the action be blocked.
+- **Step 2**: The resolution is communicated to the agent.
+- **Step 3**: The agent adjusts its behavior based on the resolution.
+
+## Best Practices
+
+- **Define Specific Policies**: Ensure policies are well-defined to guide resolution generation effectively.
+- **Log Resolutions**: Maintain a record of resolutions for feedback-driven improvements.
+- **Test Custom Strategies**: Before deploying custom resolution logic, test it thoroughly in simulated environments.
+
+## Learn More
+
+Explore related topics:
+- **[Conflict Detection](conflict-detection)**: Detecting conflicts in workflows.
+- **[Define Custom Policies](define-custom-policies)**: Setting up rules for agent behavior.
+- **[Monitor Agent Conflicts](monitor-agent-conflicts)**: Tools for tracking and analyzing conflicts.
