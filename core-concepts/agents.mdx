@@ -1,104 +1,146 @@
 ---
 title: Agents
-description: "Learn how agents interact with OVADARE to facilitate conflict detection and resolution."
+description: Learn how agents operate and interact within OVADARE, enabling conflict detection and resolution.
 ---
 
-Agents are the core participants in any multi-agent orchestration system. In OVADARE, they are defined, monitored, and evaluated to ensure smooth interactions and compliance with predefined policies. Unlike in orchestration platforms like AutoGen, where agents perform tasks and execute workflows, OVADARE focuses on their interactions and adherence to rules.
+## What are Agents in OVADARE?
 
-## **What Are Agents in OVADARE?**
+Agents are the foundational components in OVADARE. They represent individual AI entities performing tasks, making decisions, and interacting in multi-agent workflows. OVADARE enables developers to define agents, monitor their interactions, and resolve conflicts arising from their activities.
 
-In OVADARE, agents represent entities whose actions and interactions are monitored for conflicts. OVADARE doesn’t replace agent definitions from orchestration platforms but works alongside them to:
+In OVADARE, agents:
+- Operate as autonomous entities with defined capabilities and behaviors.
+- Interact with other agents, which OVADARE monitors for potential conflicts.
+- Adhere to policies that govern their actions and boundaries.
 
-- Monitor agent activities.
-- Evaluate their actions against policies.
-- Detect conflicts between agents.
-- Propose resolutions for smooth collaboration.
+Agent interactions are central to OVADARE's functionality, allowing developers to monitor, detect, and resolve conflicts in dynamic, multi-agent environments.
 
-## **Agent Components in OVADARE**
+---
 
-OVADARE provides several components to manage agents:
+## Core Features of Agents
 
-- **`agent.py`:** Defines the `Agent` class, which represents an agent’s capabilities and status.
-- **`agent_interface.py`:** Provides the abstract interface that all agents in OVADARE must adhere to.
-- **`agent_registry.py`:** A centralized registry for managing agents and their metadata.
-- **`agent_sdk.py`:** A utility for platforms like AutoGen to report agent activities and apply resolutions.
-
-## **Do You Need to Define Agents in OVADARE?**
-
-No. Agents are defined in orchestration platforms like AutoGen. However, they must be **registered** in OVADARE for conflict detection and resolution. Registration involves specifying:
-
-- **Agent ID:** A unique identifier.
-- **Capabilities:** The actions the agent is allowed to perform.
-
-### **Registering an Agent**
-You can register agents programmatically using the `AgentRegistry`:
+### 1. **Agent Definition (`agent_interface.py`)**
+The `AgentInterface` defines the structure and required methods for all agents. Implementing this interface ensures that agents are compatible with OVADARE’s conflict detection framework.
 
 ```
-python
+from ovadare.agents.agent_interface import AgentInterface
+from typing import Dict, Any
+
+class ResearchAgent(AgentInterface):
+    def __init__(self, agent_id: str):
+        self._agent_id = agent_id
+        self._capabilities = {"action": "research", "resource": "data"}
+
+    @property
+    def agent_id(self) -> str:
+        return self._agent_id
+
+    @property
+    def capabilities(self) -> Dict[str, Any]:
+        return self._capabilities
+
+    def perform_action(self, action: Dict[str, Any]) -> Dict[str, Any]:
+        # Example implementation
+        return {"status": "success"}
+```
+
+---
+
+### 2. **Agent Interactions (`agent_registry.py`)**
+OVADARE tracks agent interactions through the `AgentRegistry`. This component monitors registered agents and facilitates interaction logging to detect conflicts.
+
+```
 from ovadare.agents.agent_registry import AgentRegistry
+from ovadare.agents.agent import Agent
 
 registry = AgentRegistry()
-registry.register_agent(
-    agent_id="sales_agent_01",
-    capabilities=["read", "write"]
-)
-```
 
-This ensures OVADARE knows about the agent and its boundaries.
+# Register two agents
+agent_a = Agent("agent_A")
+agent_b = Agent("agent_B")
+
+registry.register_agent(agent_a)
+registry.register_agent(agent_b)
+
+# Log an interaction
+interaction = {
+    "from_agent": "agent_A",
+    "to_agent": "agent_B",
+    "action": "share_data",
+    "details": {"data_size": "100MB"}
+}
+
+registry.log_interaction(interaction)
+```
 
 ---
 
-## **Agent Interaction Workflow**
-
-### **Step 1: AutoGen Reports Activity**
-The orchestration platform (e.g., AutoGen) sends agent activities to OVADARE using the SDK:
-
-```
-python
-from ovadare.agent_sdk import report_action
-
-report_action(
-    agent_id="sales_agent_01",
-    action={"type": "update", "resource": "client_data", "timestamp": 1700001234}
-)
-```
-
-### **Step 2: Conflict Detection**
-OVADARE evaluates the action against its policies and checks for conflicts.
-
-### **Step 3: Resolution**
-If a conflict is detected, OVADARE generates a resolution and sends it back to AutoGen.
+### 3. **Agent Communication**
+Agents can interact directly within workflows. OVADARE captures these interactions and evaluates them against defined policies. For example, if an agent sends restricted data to another agent, a conflict can be flagged.
 
 ---
 
-## **Agent Boundaries**
+### 4. **Agent Capabilities**
+Agents in OVADARE define their capabilities—what they can do and the resources they need. These capabilities are evaluated during interactions to ensure compliance with policies.
 
-Agent boundaries in OVADARE are defined through **policies**. For example, a policy might restrict an agent to only “read” operations on certain resources. OVADARE uses these boundaries during conflict detection to evaluate compliance.
+```
+agent = Agent("agent_123")
+agent.capabilities = {"action": "analyze", "resource": "financial_data"}
+```
 
 ---
 
-## **Examples**
-
-### **Scenario: Lead Researcher Agent**
-An AutoGen-defined agent `lead_researcher_agent` is registered in OVADARE to monitor its activities.
-
-```
-python
-# Register the agent in OVADARE
-registry.register_agent(
-    agent_id="lead_researcher_agent",
-    capabilities=["read"]
-)
-
-# Report an action to OVADARE
-report_action(
-    agent_id="lead_researcher_agent",
-    action={"type": "write", "resource": "research_notes"}
-)
-```
-
-If the agent attempts to perform a `write` action but is only allowed to `read`, OVADARE detects the conflict and flags it for resolution.
+### 5. **Agent SDK (`agent_sdk.py`)**
+The Agent SDK simplifies creating, registering, and managing agents. It includes utilities for defining agent workflows and integrating with platforms like AutoGen.
 
 ---
 
-By focusing on interactions and compliance, OVADARE ensures a seamless and conflict-free environment for multi-agent systems.
+## Example Workflow: Monitoring Agent Interactions
+
+Here’s how you can define and monitor agent interactions:
+
+```
+from ovadare.agents.agent import Agent
+from ovadare.agents.agent_registry import AgentRegistry
+from ovadare.conflicts.conflict_detector import ConflictDetector
+
+# Initialize agents
+agent_a = Agent("research_agent")
+agent_b = Agent("analysis_agent")
+
+# Register agents
+registry = AgentRegistry()
+registry.register_agent(agent_a)
+registry.register_agent(agent_b)
+
+# Simulate an interaction
+interaction = {
+    "from_agent": "research_agent",
+    "to_agent": "analysis_agent",
+    "action": "share_data",
+    "details": {"data_type": "sensitive"}
+}
+registry.log_interaction(interaction)
+
+# Detect conflicts
+conflict_detector = ConflictDetector()
+conflicts = conflict_detector.detect("research_agent", interaction)
+
+if conflicts:
+    print("Conflict detected:", conflicts)
+else:
+    print("No conflicts detected.")
+```
+
+---
+
+## Current Limitations
+
+While OVADARE supports defining and monitoring agents, the framework assumes basic structures for agent interactions. Developers need to integrate agents with platforms like AutoGen for advanced orchestration.
+
+---
+
+## Learn More
+
+- Discover how OVADARE [detects conflicts](./conflict-detection).
+- Dive into [resolution strategies](./resolution-engine).
+- Learn about setting [policies](./policies) for agent actions.
