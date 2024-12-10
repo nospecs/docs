@@ -1,0 +1,97 @@
+---
+title: Define Custom Policies
+description: Guide to creating and managing custom conflict policies in OVADARE.
+---
+
+## Why Define Custom Policies?
+
+Custom policies allow you to tailor conflict detection rules for your specific workflows and agent interactions. Policies ensure that AI agents operate within defined boundaries, preventing conflicts and misalignments.
+
+---
+
+## Creating a Policy
+
+Use OVADARE's `PolicyManager` to define and manage custom policies.
+
+```
+from ovadare.policies import PolicyManager, Policy
+
+# Initialize the Policy Manager
+policy_manager = PolicyManager()
+
+# Create a new policy
+no_duplicate_tasks = Policy(
+    name="NoDuplicateTasks",
+    rules={
+        "task_assignment": "unique_per_agent"
+    }
+)
+
+# Add the policy to the manager
+policy_manager.add_policy(no_duplicate_tasks)
+```
+
+---
+
+## Managing Policies
+
+You can update, remove, or retrieve policies dynamically.
+
+```
+# Retrieve a specific policy
+policy = policy_manager.get_policy("NoDuplicateTasks")
+print("Retrieved Policy:", policy)
+
+# Update an existing policy
+policy_manager.update_policy(
+    name="NoDuplicateTasks",
+    rules={
+        "task_assignment": "strictly_unique_per_agent"
+    }
+)
+
+# Remove a policy
+policy_manager.remove_policy("NoDuplicateTasks")
+print("Policy removed successfully.")
+```
+
+---
+
+## Policy Rules Syntax
+
+Policies are defined as rule-based configurations using JSON-like syntax. Example rules include:
+
+- `resource_allocation`: Prevents agents from overloading system resources.
+- `task_overlap`: Ensures no two agents work on the same task simultaneously.
+- `access_level`: Limits data or system access based on agent roles.
+
+Example:
+
+```
+# Example of defining a complex policy
+complex_policy = Policy(
+    name="ComplexPolicy",
+    rules={
+        "resource_allocation": "balanced",
+        "task_overlap": "disallow",
+        "access_level": "restricted"
+    }
+)
+
+policy_manager.add_policy(complex_policy)
+```
+
+---
+
+## Debugging and Monitoring Policies
+
+Use OVADARE's logging and monitoring tools to debug policy application and refine them over time.
+
+```
+# Monitor policies in real-time
+policy_manager.monitor_policies()
+```
+
+---
+
+Custom policies are the foundation of conflict detection and resolution in OVADARE. By defining and managing these rules, you can ensure smooth and efficient multi-agent collaboration.
