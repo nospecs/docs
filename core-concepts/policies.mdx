@@ -1,88 +1,112 @@
 ---
 title: Policies
-description: Learn how to define and manage policies to guide agent behavior in OVADARE.
+description: Define and manage rules to control agent behaviors and interactions in OVADARE.
 ---
 
-## What are Policies?
+## What are Policies in OVADARE?
 
-Policies in OVADARE define the rules and boundaries that govern agent behavior. They help prevent conflicts by ensuring agents operate within predefined constraints.
-
-### Why Policies are Essential
-
-In multi-agent systems, agents often compete for resources or execute conflicting tasks. Policies:
-- Set boundaries for agent behavior.
-- Define acceptable actions and roles.
-- Act as a guide for resolving potential conflicts.
+Policies are the foundation of OVADARE's conflict detection and resolution system. They define the rules and boundaries that guide agent behaviors and interactions, ensuring collaboration stays within predefined constraints.
 
 ---
 
-## How Policies Work
+## Why Use Policies?
 
-1. **Definition**: Policies are defined as sets of rules that specify acceptable actions or roles for agents.
-2. **Evaluation**: Agent actions are evaluated against policies during execution.
-3. **Enforcement**: Actions that violate policies trigger conflicts, which are handled by the Resolution Engine.
+- **Prevent Conflict**: Set clear expectations to avoid potential agent conflicts.
+- **Ensure Compliance**: Maintain adherence to organizational rules and workflows.
+- **Dynamic Control**: Adapt policies dynamically to fit evolving needs.
 
 ---
 
-### Code Example: Defining a Policy
+## Defining Policies
 
-Here’s an example of how to define a read-only policy for an agent:
+In OVADARE, policies are defined as sets of rules that agents must follow. These rules are evaluated during agent actions to detect violations.
 
 ```
-from ovadare.policies.policy_manager import Policy
-```
+from ovadare.policies.policy_manager import Policy, PolicyManager
 
-# Define a read-only policy
-```
-read_only_policy = Policy(
+# Define a policy
+read_policy = Policy(
     name="ReadOnlyPolicy",
     rules={
         "access_level": "read",
-        "resource_limits": "moderate"
+        "resource_restriction": ["confidential_files"]
     }
 )
 
-print(f"Policy defined: {read_only_policy.name}")
-```
-
----
-
-## Applying Policies
-
-1. **Assign to Agents**:
-   Policies are linked to agents during initialization to guide their behavior.
-
-```
-from ovadare.policies.policy_manager import PolicyManager
-```
-
-# Initialize the policy manager
+# Initialize the Policy Manager
 policy_manager = PolicyManager()
 
 # Add the policy
-policy_manager.add_policy(read_only_policy)
-
-# Assign policies to agents
+policy_manager.add_policy(read_policy)
+print(f"Policy added: {read_policy.name}")
 ```
-agent_a_policies = policy_manager.get_policies("agentA")
-```
-
-2. **Enforce During Execution**:
-   When agents perform actions, their behavior is checked against assigned policies to detect violations.
 
 ---
 
-## Key Features
+## Evaluating Policies
 
-- **Customizable Rules**:
-  Define rules specific to your workflow or system requirements.
-- **Dynamic Updates**:
-  Modify policies in real-time to adapt to changing environments.
-- **Centralized Management**:
-  Use the Policy Manager to oversee all policies in the system.
+When agents perform actions, their activities are evaluated against the defined policies. If an action violates a policy, a conflict is triggered.
+
+```
+from ovadare.policies.policy_manager import PolicyManager
+
+# Simulate an action
+action = {
+    "agent_id": "agent_X",
+    "action": "edit_document",
+    "resource": "confidential_files"
+}
+
+# Evaluate the action
+evaluation_result = policy_manager.evaluate_policies(action)
+if not evaluation_result.is_compliant:
+    print(f"Conflict detected: {evaluation_result.message}")
+```
 
 ---
 
-## Next Steps
+## Example: Creating Custom Policies
 
-To see how policies integrate into the conflict detection process, visit the [Conflict Detection](core-concepts/conflict-detection) section. For detailed guides on creating your own policies, check out [Define Custom Policies](how-to-guides/define-custom-policies).
+You can create tailored policies for specific workflows. For example:
+
+1. **Access Control Policies**: Restrict agent access to sensitive resources.
+2. **Task Prioritization Policies**: Define task execution priorities for agents.
+3. **Interaction Rules**: Limit certain types of agent interactions.
+
+```
+from ovadare.policies.policy_manager import Policy
+
+# Define a custom policy
+interaction_policy = Policy(
+    name="InteractionPolicy",
+    rules={
+        "allowed_agents": ["agent_A", "agent_B"],
+        "interaction_limit": 5
+    }
+)
+
+policy_manager.add_policy(interaction_policy)
+```
+
+---
+
+## Managing Policies
+
+The Policy Manager is the central component for managing policies in OVADARE. It allows you to:
+- Add and remove policies.
+- Update existing policies dynamically.
+- Retrieve the list of active policies.
+
+```
+# Retrieve active policies
+active_policies = policy_manager.get_all_policies()
+print("Active policies:", [policy.name for policy in active_policies])
+```
+
+---
+
+## Learn More
+
+- Explore how OVADARE [detects conflicts](./conflict-detection) based on policy violations.
+- Understand how the [Resolution Engine](./resolution-engine) resolves detected conflicts.
+- Dive into [agent interactions](./agents) and their role in conflict scenarios.
