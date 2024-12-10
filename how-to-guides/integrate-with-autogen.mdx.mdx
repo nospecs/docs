@@ -22,7 +22,7 @@ AutoGen is a powerful platform for orchestrating multi-agent workflows, enabling
    Install necessary packages:
    `pip install autogen`
 
----
+***
 
 ## Step 1: Define Your Agents in AutoGen
 
@@ -38,7 +38,7 @@ sales_strategist_agent = AssistantAgent(name="SalesStrategist")
 briefing_coordinator_agent = AssistantAgent(name="BriefingCoordinator")
 ```
 
----
+***
 
 ## Step 2: Initialize OVADARE for Conflict Detection
 
@@ -54,7 +54,7 @@ conflict_detector = ConflictDetector(policy_manager=policy_manager)
 resolution_engine = ResolutionEngine()
 ```
 
----
+***
 
 ## Step 3: Configure Policies in OVADARE
 
@@ -73,7 +73,7 @@ policy_manager.add_policy(
 )
 ```
 
----
+***
 
 ## Step 4: Enable Real-Time Conflict Detection
 
@@ -93,7 +93,7 @@ def monitor_agent_actions():
         print("Conflicts detected:", conflicts)
 ```
 
----
+***
 
 ## Step 5: Resolve Detected Conflicts
 
@@ -108,13 +108,13 @@ if conflicts:
         print("Applied resolution:", resolution)
 ```
 
----
+***
 
 ## Step 6: Observe Results in AutoGen
 
 With conflicts detected and resolved, your AutoGen workflow will proceed seamlessly. Monitor agent interactions to verify improved collaboration and efficiency.
 
----
+***
 
 ## Example: End-to-End Integration
 
@@ -137,7 +137,7 @@ for resolution in resolutions:
     resolution_engine.apply_resolution(resolution)
 ```
 
----
+***
 
 ## Key Benefits of Integration
 
@@ -149,5 +149,3 @@ for resolution in resolutions:
 
 3. **Actionable Insights**:
    Gain visibility into agent actions and potential misalignments.
-
-For more advanced guides, explore our [How-to Guides](/how-to-guides).
