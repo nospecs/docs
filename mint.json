@@ -56,16 +56,6 @@
         "installation",
         "quickstart"
       ]
-      "group": "Core Concepts",
-      "pages": [
-        "core-concepts/conflict-detection",
-        "core-concepts/resolution-engine",
-        "core-concepts/policies",
-        "core-concepts/agents",
-        "core-concepts/workflows",
-        "core-concepts/platforms",
-        "core-concepts/agent-interactions"
-      ]
     },
     {
       "group": "Core Concepts",
