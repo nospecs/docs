@@ -1,66 +1,108 @@
 ---
 title: Installation
-description: 'Step-by-step guide to install OVADARE for your multi-agent platforms.'
+description: Step-by-step guide to installing OVADARE in your project.
 ---
 
-Follow these steps to install OVADARE and integrate it into your workflow.
+## Installation Guide
+
+Follow this guide to install OVADARE and set up your development environment.
+
+---
 
 ## Prerequisites
 
-Before installing OVADARE, ensure you have the following:
+Ensure you have:
+- **Python 3.7 or higher** installed.
+- A virtual environment for project isolation (recommended).
 
-* Python version 3.7 or newer.
+---
 
-* pip, Python's package installer, installed on your system.
+## Step 1: Install OVADARE
 
-* Familiarity with multi-agent orchestration platforms like AutoGen or CrewAI.
-
-## Step-by-Step Installation
-
-### 1. Install OVADARE
-
-Run the following command in your terminal to install OVADARE via pip:
+Install OVADARE via `pip`:
 
 ```
 pip install ovadare
 ```
 
-This will install the latest version of OVADARE and its dependencies.
+---
 
-### 2. Verify Installation
+## Step 2: Verify Installation
 
-To confirm OVADARE is installed, execute this command in your terminal:
-
-```
--m ovadare --version
-```
-
-You should see the installed version of OVADARE displayed.
-
-### 3. Integrate OVADARE in Your Project
-
-To start using OVADARE, import its modules into your Python scripts. For example:
+To confirm the installation, run the following command in your terminal:
 
 ```
-from ovadare import ConflictDetector, ResolutionEngine
+-m pip show ovadare
 ```
 
-This allows you to begin integrating OVADARE’s conflict detection and resolution tools into your workflows.
-
-## Troubleshooting Installation
-
-If you encounter issues during installation:
-
-* Ensure Python and pip are up to date.
-
-* Check for permission errors and use `--user` with pip if needed:
+You should see output similar to this:
 
 ```
-pip install --user ovadare
+Name: ovadare
+Version: 0.1.3
+Summary: A framework for conflict detection and resolution in multi-agent systems.
+Home-page: https://github.com/nospecs/ovadare
+Author: Oren Mukades
+Author-email: ai@ovadare.com
+License: MIT
 ```
 
-* Refer to our [Troubleshooting Guide](troubleshooting) for detailed solutions.
+---
 
-## What’s Next?
+## Step 3: Initialize OVADARE in Your Project
 
-Now that OVADARE is installed, dive into the [Quickstart](quickstart) to learn how to detect and resolve conflicts with minimal setup.
+Create a Python script or integrate OVADARE into your existing multi-agent workflow.
+
+Start by importing OVADARE modules:
+
+```
+from ovadare.agents.agent_registry import AgentRegistry
+from ovadare.conflicts.conflict_detector import ConflictDetector
+from ovadare.resolution.resolution_engine import ResolutionEngine
+```
+
+---
+
+## Step 4: Set Up Your Environment (Optional)
+
+To configure OVADARE for advanced features, create a `.env` file in your project directory with custom settings:
+
+```
+CONFLICT_STORAGE_FILE=conflicts_data.json
+RESOLUTION_STRATEGY=adaptive
+```
+
+Install `python-dotenv` to load environment variables:
+
+```
+pip install python-dotenv
+```
+
+---
+
+## Step 5: Run Example Scripts
+
+Test OVADARE with the built-in example scripts provided in the [GitHub repository](https://github.com/nospecs/ovadare). Clone the repository and navigate to the `examples` folder:
+
+```
+bash
+git clone https://github.com/nospecs/ovadare.git
+cd ovadare/examples
+python example_integration.py
+```
+
+---
+
+## Troubleshooting Installation Issues
+
+- **Dependency conflicts**: Run `pip install --upgrade pip` and try installing OVADARE again.
+- **Module not found**: Verify the virtual environment is active and OVADARE is installed inside it.
+- **Compatibility issues**: Ensure Python 3.7 or higher is being used.
+
+For more help, see the [Troubleshooting Guide](/tutorials/troubleshooting).
+
+---
+
+## Next Steps
+
+Once installed, proceed to the [Quickstart Guide](/get-started/quickstart) to start using OVADARE in your project.
