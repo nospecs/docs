@@ -1,86 +1,99 @@
 ---
 title: Quickstart
-description: 'A quick setup example to detect and resolve AI agent conflicts using OVADARE.'
+description: Quickly get started with OVADARE to detect and resolve AI agent conflicts.
 ---
 
-# Quickstart
+## Quickstart with OVADARE
 
-Get started with OVADARE in minutes by following this quick setup example. Detect and resolve AI agent conflicts seamlessly.
+This guide will help you set up OVADARE in minutes to detect and resolve conflicts in your multi-agent systems.
 
-## Setting Up OVADARE
+---
 
-### Step 1: Install OVADARE
+## Prerequisites
 
-Ensure OVADARE is installed using pip:
+Ensure you have the following:
+- **Python 3.7 or higher** installed.
+- A multi-agent platform like **AutoGen** integrated with your project.
+- OVADARE installed. If not, follow the [Installation Guide](/get-started/installation).
 
-```pip install ovadare```
+---
 
-### Step 2: Import the Framework
+## Step 1: Import OVADARE into Your Project
 
-Import OVADARE into your Python project:
-
-```from ovadare import ConflictDetector, ResolutionEngine```
-
-### Step 3: Define Your Policies
-
-Create custom conflict policies to govern agent interactions:
-
-```from ovadare.policies.policy_manager import Policy```
+Start by importing the required modules from OVADARE:
 
 ```
-policy = Policy(
-    name='WriteAccessPolicy',
-    rules={
-        'resource_limits': 'moderate',
-        'access_level': 'read-only'
-    }
+from ovadare.agents.agent_registry import AgentRegistry
+from ovadare.conflicts.conflict_detector import ConflictDetector
+from ovadare.resolution.resolution_engine import ResolutionEngine
+```
+
+---
+
+## Step 2: Register Your Agents
+
+Register the agents you want OVADARE to monitor. For example:
+
+```
+agent_registry = AgentRegistry()
+
+agent_registry.register_agent(
+    agent_id="lead_researcher",
+    capabilities={"analyze_data": True, "prepare_reports": True}
+)
+
+agent_registry.register_agent(
+    agent_id="sales_strategist",
+    capabilities={"create_sales_strategy": True, "evaluate_trends": True}
 )
 ```
 
-### Step 4: Initialize the Conflict Detector and Resolution Engine
+---
 
-Set up the main components of OVADARE:
+## Step 3: Detect Conflicts
 
-```
-conflict_detector = ConflictDetector()
-```
-
-```resolution_engine = ResolutionEngine()```
-
-### Step 5: Simulate an Agent Workflow
-
-Detect conflicts between agents in a simulated workflow:
+Set up the **Conflict Detector** to analyze actions and identify potential conflicts:
 
 ```
-agent_action = {
-    'agent_id': 'lead_researcher_agent',
-    'action': 'write_data',
-    'resource': 'CompanyDatabase'
-}
-```
+conflict_detector = ConflictDetector(agent_registry)
 
-```conflicts = conflict_detector.detect(agent_action['agent_id'], agent_action)```
+conflicts = conflict_detector.detect(
+    agent_id="lead_researcher",
+    action={"task": "create_sales_strategy", "resource": "market_data"}
+)
 
-```
 if conflicts:
-    print(f"Conflicts detected: {len(conflicts)}")
+    print("Conflicts detected:", conflicts)
 else:
     print("No conflicts detected.")
 ```
 
-### Step 6: Resolve Detected Conflicts
+---
 
-Generate and apply resolutions for the detected conflicts:
+## Step 4: Resolve Conflicts
 
-```resolutions = resolution_engine.generate_resolutions(conflicts)```
+Use the **Resolution Engine** to resolve detected conflicts dynamically:
 
 ```
+resolution_engine = ResolutionEngine(agent_registry)
+
+resolutions = resolution_engine.generate_resolutions(conflicts)
+
 for resolution in resolutions:
-    print(f"Resolution: {resolution.explanation}")
+    print("Resolution applied:", resolution)
 ```
+---
 
-## Next Steps
+## Step 5: Iterate and Improve
 
-- Learn more about [conflict detection](../core-concepts/conflict-detection).
-- Explore how to [define custom policies](../how-to-guides/define-custom-policies).
-- Dive into [integration with AutoGen](../how-to-guides/integrate-with-autogen).
+Integrate feedback from conflict resolution to refine your policies and improve collaboration between agents. Explore how to define custom policies in the [Policy Management Guide](/core-concepts/policies).
+
+---
+
+## Explore More
+
+Ready to dive deeper? Check out:
+- [Core Concepts](/core-concepts/conflict-detection) for a detailed breakdown of OVADARE’s framework.
+- [Integrate OVADARE with AutoGen](/how-to-guides/integrate-with-autogen) for platform-specific setup.
+
+---
