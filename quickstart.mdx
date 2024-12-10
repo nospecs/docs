@@ -34,7 +34,8 @@ policy = Policy(
         'resource_limits': 'moderate',
         'access_level': 'read-only'
     }
-) ```
+)
+```
 
 
 ### Step 4: Initialize the Conflict Detector and Resolution Engine
@@ -54,7 +55,8 @@ agent_action = {
     'agent_id': 'lead_researcher_agent',
     'action': 'write_data',
     'resource': 'CompanyDatabase'
-}```
+}
+```
 
 ```conflicts = conflict_detector.detect(agent_action['agent_id'], agent_action)```
 
@@ -62,15 +64,19 @@ agent_action = {
 if conflicts:
     print(f"Conflicts detected: {len(conflicts)}")
 else:
-    print("No conflicts detected.")```
+    print("No conflicts detected.")
+```
 
 ### Step 6: Resolve Detected Conflicts
 
 Generate and apply resolutions for the detected conflicts:
 
 ```resolutions = resolution_engine.generate_resolutions(conflicts)```
-```for resolution in resolutions:
-    print(f"Resolution: {resolution.explanation}")```
+
+```
+for resolution in resolutions:
+    print(f"Resolution: {resolution.explanation}")
+```
 
 ## Next Steps
 
