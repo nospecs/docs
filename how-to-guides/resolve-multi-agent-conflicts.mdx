@@ -1,0 +1,123 @@
+---
+title: Resolve Multi-Agent Conflicts
+description: Practical guide for identifying and resolving conflicts using OVADARE.
+---
+
+## Introduction
+
+Conflicts in multi-agent systems can arise when agents work at cross-purposes or violate defined policies. OVADARE helps detect these conflicts and provides resolutions to maintain harmony in workflows.
+
+This guide demonstrates how to use OVADARE to identify and resolve conflicts in a multi-agent setup.
+
+## Steps to Resolve Conflicts
+
+### 1. Initialize the Conflict Detector
+
+The `ConflictDetector` component is responsible for detecting conflicts in agent workflows. Initialize it as follows:
+
+```
+from ovadare.conflicts.conflict_detector import ConflictDetector
+
+conflict_detector = ConflictDetector()
+```
+
+### 2. Register Policies and Agents
+
+Ensure agents and their associated policies are registered before conflict detection begins.
+
+- **Register Agents**:
+
+```
+from ovadare.agents.agent import Agent
+
+agent_a = Agent(agent_id="AgentA")
+agent_b = Agent(agent_id="AgentB")
+```
+
+- **Assign Policies**:
+
+```
+from ovadare.policies.policy import Policy
+from ovadare.policies.policy_manager import PolicyManager
+
+policy_manager = PolicyManager()
+
+write_policy = Policy(
+    name="WritePolicy",
+    rules={"access_level": "write"}
+)
+policy_manager.add_policy(write_policy)
+
+agent_a.assign_policy(write_policy)
+```
+
+### 3. Detect Conflicts
+
+Use the `detect` method of `ConflictDetector` to evaluate agent actions and identify conflicts:
+
+```
+action_a = {"action": "write_data", "resource": "Dataset1"}
+conflicts = conflict_detector.detect(agent_id="AgentA", action=action_a)
+
+if conflicts:
+    for conflict in conflicts:
+        print(f"Conflict detected: {conflict}")
+else:
+    print("No conflicts detected.")
+```
+
+### 4. Generate Resolutions
+
+The `ResolutionEngine` generates resolutions for detected conflicts. Initialize it and resolve conflicts:
+
+```
+from ovadare.conflicts.resolution_engine import ResolutionEngine
+
+resolution_engine = ResolutionEngine()
+resolutions = resolution_engine.generate_resolutions(conflicts)
+
+for resolution in resolutions:
+    print(f"Resolution generated: {resolution}")
+```
+
+### 5. Apply Resolutions to Agents
+
+Communicate the generated resolutions back to the agents:
+
+```
+resolution_engine.apply_resolutions(resolutions)
+```
+
+## Example Workflow
+
+Here's a complete example of a conflict resolution workflow:
+
+```
+# Initialize components
+conflict_detector = ConflictDetector()
+resolution_engine = ResolutionEngine()
+
+# Define agents and policies
+agent = Agent(agent_id="Agent001")
+policy = Policy(name="ReadOnlyPolicy", rules={"access_level": "read-only"})
+policy_manager.add_policy(policy)
+agent.assign_policy(policy)
+
+# Simulate an action that violates the policy
+action = {"action": "write_data", "resource": "Dataset1"}
+conflicts = conflict_detector.detect(agent_id="Agent001", action=action)
+
+if conflicts:
+    resolutions = resolution_engine.generate_resolutions(conflicts)
+    resolution_engine.apply_resolutions(resolutions)
+```
+
+## Practical Tips
+
+- **Predefine Policies**: Ensure policies cover most potential conflict scenarios.
+- **Test in Controlled Environments**: Simulate agent workflows to identify conflicts before deploying in production.
+- **Audit Agent Interactions**: Regularly monitor agent activities for patterns that may indicate emerging conflicts.
+
+## Next Steps
+
+To learn more about how OVADARE handles conflict detection, visit **[Conflict Detection](../core-concepts/conflict-detection)**. For customizing resolutions, check out **[Customize Resolution Strategies](customize-resolution-strategies)**.
