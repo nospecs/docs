@@ -54,9 +54,8 @@
       "pages": [
         "introduction",
         "installation",
-        "quickstart",
-        "essentials/code"
-      ]
+        "quickstart"
+        ]
     },
     {
       "group": "Core Concepts",
