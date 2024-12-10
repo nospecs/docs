@@ -1,95 +1,134 @@
 ---
 title: Customize Resolution Strategies
-description: Guide to tailoring conflict resolution approaches in OVADARE.
+description: Guide to tailoring conflict resolution strategies using OVADARE's Resolution Engine.
 ---
 
 ## Introduction
 
-OVADARE provides flexibility to customize resolution strategies, enabling developers to define tailored responses to conflicts based on the unique requirements of their multi-agent systems. This guide walks you through configuring and applying custom resolution strategies.
+OVADARE's Resolution Engine provides flexible mechanisms for resolving conflicts in multi-agent systems. Developers can customize resolution strategies to suit specific workflows and align with organizational policies.
 
-## Steps for Customizing Resolutions
+## Customizing Strategies
 
 ### 1. Define Custom Resolution Logic
 
-Create a custom function to handle resolutions. This function should adhere to your specific conflict resolution requirements:
-
-```
-from ovadare.conflicts.resolution import Resolution
-
-def custom_resolution_logic(conflict):
-    resolution = Resolution(
-        conflict_id=conflict.conflict_id,
-        corrective_action={"action": "modify_policy", "details": {"new_policy": "Read-Only"}},
-        explanation=f"Conflict resolved by modifying the policy for agent '{conflict.related_agent_id}'."
-    )
-    return resolution
-```
-
-### 2. Extend the Resolution Engine
-
-Integrate the custom resolution logic into the `ResolutionEngine` by subclassing or overriding its default behavior:
+Extend the default behavior of the `ResolutionEngine` to include tailored resolution actions.
 
 ```
 from ovadare.conflicts.resolution_engine import ResolutionEngine
+from ovadare.conflicts.resolution import Resolution
+from ovadare.conflicts.conflict import Conflict
 
 class CustomResolutionEngine(ResolutionEngine):
-    def _create_resolution(self, conflict):
-        # Use custom logic for resolution generation
-        return custom_resolution_logic(conflict)
-```
+    def _create_resolution(self, conflict: Conflict) -> Resolution:
+        # Custom resolution logic
+        corrective_action = {
+            "action": "limit_access",
+            "details": {
+                "agent_id": conflict.related_agent_id,
+                "message": f"Access restricted due to policy: {conflict.policy_id}"
+            }
+        }
+        explanation = f"Custom resolution applied for conflict {conflict.conflict_id}"
+        
+        return Resolution(
+            conflict_id=conflict.conflict_id,
+            corrective_action=corrective_action,
+            explanation=explanation
+        )
 
-### 3. Use the Custom Resolution Engine
-
-Replace the default `ResolutionEngine` with your custom implementation to enable tailored conflict resolution:
-
-```
+# Example usage
 custom_engine = CustomResolutionEngine()
+conflicts = [conflict_detector.get_conflict_by_id("Conflict001")]
 
-conflicts = conflict_detector.detect(agent_id="Agent001", action={"action": "write_data", "resource": "SharedDoc"})
-
-if conflicts:
-    resolutions = custom_engine.generate_resolutions(conflicts)
-    custom_engine.apply_resolutions(resolutions)
-```
-
-### 4. Apply Resolutions Dynamically
-
-Handle resolutions dynamically by integrating them back into the platform or communicating them to the affected agents:
-
-```
+resolutions = custom_engine.generate_resolutions(conflicts)
 for resolution in resolutions:
-    print(f"Applying resolution: {resolution.to_dict()}")
-    # Implement platform-specific logic here
+    print(f"Resolution: {resolution.to_dict()}")
 ```
 
-## Example Workflow
+### 2. Add Resolution Strategies Based on Policies
 
-Here’s a practical example of customizing resolutions for an agent action conflict:
+Define specific rules within the `PolicyManager` to guide conflict resolution.
 
 ```
-from ovadare.conflicts.conflict import Conflict
-from ovadare.conflicts.resolution_engine import ResolutionEngine
+from ovadare.policies.policy_manager import PolicyManager, Policy
 
-# Example conflict
-conflict = Conflict(
-    conflict_id="Conflict001",
-    related_agent_id="Agent002",
-    action={"action": "write_data", "resource": "SharedDoc"},
-    violation_details="Policy violation: Unauthorized write attempt.",
-    policy_id="Policy001"
+policy_manager = PolicyManager()
+
+# Example: Define a custom policy
+custom_policy = Policy(
+    name="DataAccessPolicy",
+    rules={
+        "agent_role": "DataAnalyst",
+        "resource": "ConfidentialReport",
+        "action": "read_only"
+    }
 )
 
-# Custom resolution
-resolution = custom_resolution_logic(conflict)
-print(f"Custom resolution generated: {resolution.to_dict()}")
+policy_manager.add_policy(custom_policy)
+print("Custom policy added successfully.")
 ```
 
-## Tips for Customization
+### 3. Handle Multi-Agent Scenarios
 
-- **Agent-Specific Resolutions**: Tailor resolutions for individual agents based on their roles or capabilities.
-- **Policy Adjustment**: Dynamically update policies as part of the resolution to prevent future conflicts.
-- **Human-in-the-Loop**: Involve a human reviewer for critical decisions, ensuring that resolutions align with organizational goals.
+Use OVADARE to resolve conflicts involving multiple agents simultaneously.
+
+```
+from ovadare.agents.agent_registry import AgentRegistry
+
+# Example: Notify multiple agents
+for conflict in conflicts:
+    agents = AgentRegistry.get_agents_by_resource(conflict.action["resource"])
+    for agent in agents:
+        agent.notify_resolution(resolution)
+```
+
+### 4. Test Resolution Scenarios
+
+Simulate and test custom resolution strategies to ensure effectiveness:
+
+```
+from ovadare.utils.testing import simulate_conflict
+
+conflicts = simulate_conflict(agent_id="Agent001", action={"action": "modify_data", "resource": "RestrictedFile"})
+
+resolutions = custom_engine.generate_resolutions(conflicts)
+print("Test Resolutions:", [res.to_dict() for res in resolutions])
+```
+
+## Example Use Case
+
+Customize a resolution strategy to prioritize actions:
+
+- **Scenario**: Two agents attempt to modify the same file.
+- **Resolution**: The system resolves the conflict by granting priority to the agent with higher permissions.
+
+```
+class PriorityResolutionEngine(ResolutionEngine):
+    def _create_resolution(self, conflict: Conflict) -> Resolution:
+        priority_agent = "AgentWithHighPriority"
+        corrective_action = {
+            "action": "grant_priority",
+            "details": {
+                "agent_id": priority_agent,
+                "message": f"Priority granted to {priority_agent} for action on resource {conflict.action['resource']}."
+            }
+        }
+        return Resolution(
+            conflict_id=conflict.conflict_id,
+            corrective_action=corrective_action,
+            explanation="Resolved based on agent priority."
+        )
+```
+
+## Best Practices
+
+- **Leverage Policy Rules**: Define clear rules to guide resolution strategies.
+- **Iterate on Feedback**: Use conflict logs to refine and improve strategies over time.
+- **Test Thoroughly**: Simulate diverse scenarios to validate resolution effectiveness.
 
 ## Learn More
 
-For more details on OVADARE’s resolution capabilities, visit **[Resolution Engine](resolution-engine)**. Explore **[Define Custom Policies](define-custom-policies)** to fine-tune your system’s conflict management rules.
+Explore related topics:
+- **[Resolution Engine](resolution-engine)**: Learn about the core functionality.
+- **[Define Custom Policies](define-custom-policies)**: Create rules to streamline resolution.
+- **[Conflict Detection](conflict-detection)**: Understand how conflicts are identified.
