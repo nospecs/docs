@@ -2,9 +2,9 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "OVADARE",
   "logo": {
-    "dark": "/logo/OVADARE-logo-white.svg",
-    "light": "/logo/OVADARE-logo.svg"
-    "banner": "/logo/ovadare-banner.png"
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg"
+    "banner": "/logo/banner.png"
   },
   "favicon": "/logo/OVADARE-logo.svg",
   "colors": {
